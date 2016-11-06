@@ -1,0 +1,12 @@
+1 Open cmd
+2 mysql -u root -p (press Enter)
+3 type your password
+4 create database planb (CREATE DATABASE planb)
+    -access this database: use planb;
+    -create Feature table: create table feature(id bigint(7) primary key auto_increment, name varchar(255), address varchar(255), details varchar(255));
+    -don't enter any data into feature table! if you insert anything, the tests fill fail.
+5 Open AppConfig (under src/main/java/config)
+6 Change the username (I used root) dataSource.setUsername("root")
+7 Change the password (I used cookie) dataSource.setPassword("cookie")
+8 Please don't commit your AppConfig class (when another developer will pull from github, he will also download the AppConfig)
+    -you can put this file in .gitignore

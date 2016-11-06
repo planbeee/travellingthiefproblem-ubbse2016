@@ -1,0 +1,1 @@
+<!-- create table feature(id bigint(7) primary key auto_increment, name varchar(255), address varchar(255), details varchar(255)); !-->
