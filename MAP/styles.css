@@ -1,0 +1,28 @@
+html {
+    height: 100%;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+#menu {
+    background: lightslategray;
+    width: 25%;
+    height: 640px;
+    float: left;
+    display: block;
+    margin-right: 1%;
+}
+
+#menu button {
+    display: block;
+}
+
+#map {
+    height: 640px;
+    width: 74%;
+    /*height: 100%;*/
+    float: right;
+}
