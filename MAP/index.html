@@ -8,13 +8,14 @@
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBL5cY3oHem0_1eSKtiNg8S7MuJ7vG-3RY&callback=initMap"></script>
     <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script> -->
     <script src="googleMap.js"></script>
+    <script src="interface.js"></script>
 </head>
 
-<body>
+<body onload="autoSizeSelect()">
     <div id="menu">
-        <button type="button">Click Me!</button>
-        <button type="button">Cancer</button>
-        <select size="10">
+        <button type="button">Send data</button>
+        <button type="button">Cancel</button>
+        <select multiple='multiple' id='sel'>
           <option value="adc">Marksman</option>
           <option value="sup">Support</option>
           <option value="mid">Middle</option>
