@@ -13,14 +13,14 @@
 }
 
 #menu select {
-    height: max-content;
+    height: 20em;
     border: 1px solid #ccc;
     background: #f6f6f6;
     background-image: 0;
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
     border-radius: 3px;
-    overflow: hidden;
+    /*overflow: hidden;*/
     white-space: nowrap;
     cursor: pointer;
     padding: 0 .5em;
