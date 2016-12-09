@@ -44,20 +44,7 @@ function calculateAndDisplayRoute(x, y) {
     });
 }
 
-//directionsService.route(requestArray[i], directionResults);
-
-//addMarker(latlngCenter);
-//addMarker(aghires);
-//addMarker(cluj);
-
 console.log(markers);
-
-//calculateAndDisplayRoute(markers[0].getPosition(), markers[1].getPosition());
-//calculateAndDisplayRoute(markers[1].getPosition(), markers[2].getPosition());
-
-//renderArray[cur] = new google.maps.DirectionsRenderer();
-//renderArray[cur].setMap(map);
-//renderArray[cur].setDirections(result);
 
 function addMarker(x) {
     markers[markerLabelNum] = new google.maps.Marker({
@@ -67,9 +54,6 @@ function addMarker(x) {
     });
     markerLabelNum++;
 }
-
-//pontokat tesz a mapra
-//addMarker(aghires);
 //utolsó marker törlése, tömbökkel bármelyik törölhető	
 //markers.setMap(null);
 
