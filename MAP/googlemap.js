@@ -41,9 +41,13 @@ function routeDisplay(map, geocoder, event) {
         }
     }
 
+    //addToSelect(markers[markers.length - 1].getPosition());
+}
+
+function addToSelect(toAdd) {
     var latlngX = document.getElementById("sel");
     var option = document.createElement("option");
-    option.text = markers[markers.length - 1].getPosition();
+    option.text = toAdd;
     latlngX.add(option);
 }
 
@@ -81,6 +85,7 @@ function addMarker(latlngX) {
         position: latlngX,
         map: map
     });
+    addToSelect(markerLabelNum);
     markerLabelNum++;
 }
 //utolsó marker törlése, tömbökkel bármelyik törölhető	
