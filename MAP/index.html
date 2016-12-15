@@ -14,13 +14,19 @@
 <body>
     <!--onload="autoSizeSelect()"> -->
     <div id="menu">
-        <button type="button" onclick="myFunction()">Send data</button>
+        <button type="button">Send data</button>
         <button type="button">Cancel</button>
-        <select multiple='multiple' id='sel'>
-          <option value="adc">Marksman</option>
-          <option value="sup">Support</option>
-          <option value="mid">Middle</option>
+        <select multiple='multiple' id='select' item-width="80">
+            
         </select>
+        <div class="dropdown">
+            <input type="image" width="150" src="https://www.frostriver.com/wp-content/uploads/2014/02/p-794-817-Knapsack.png" />
+            <div class="dropdown-content">
+                <p id="sack">Empty!</p>
+            </div>
+        </div>
+        <h1 style="display: inline-block;">
+            <-Hover </h1>
     </div>
     <div id="map"></div>
 </body>

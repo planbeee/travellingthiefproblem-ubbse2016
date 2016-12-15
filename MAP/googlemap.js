@@ -1,16 +1,19 @@
-var markers = [];
-var markerLabelNum = 0;
-var responseIndex = 0;
-var responses = [];
-var myData = [];
-var wow = ["green", "purple", "red", "yellow", "blue", "orange", "black", "brown"];
-var colorIndex = 0;
+'use strict'
 
-var latlngCenter = { lat: 45.7820031, lng: 25.0681987 };
+let markers = [],
+    markerLabelNum = 0,
+    responseIndex = 0,
+    responses = [],
+    myData = [],
+    wow = ["green", "purple", "red", "yellow", "blue", "orange", "black", "brown"],
+    colorIndex = 0,
+    selectedMarkerValue = -999
 
-var directionsService;
-var directionsDisplay;
-var map;
+let latlngCenter = { lat: 45.7820031, lng: 25.0681987 };
+
+let directionsService;
+let directionsDisplay;
+let map;
 
 //inicializálja a térképet
 function initMap() {
@@ -22,7 +25,7 @@ function initMap() {
 
 
     // purpose: decode latitude and longitude to address
-    var geocoder = new google.maps.Geocoder;
+    let geocoder = new google.maps.Geocoder;
 
     google.maps.event.addListener(map, "click", function(event) {
         routeDisplay(map, geocoder, event);
@@ -30,13 +33,13 @@ function initMap() {
 }
 
 function routeDisplay(map, geocoder, event) {
-    var latX = event.latLng.lat();
-    var lngX = event.latLng.lng();
-    var latlngX = { lat: latX, lng: lngX };
+    let latX = event.latLng.lat();
+    let lngX = event.latLng.lng()
+    let latlngX = { lat: latX, lng: lngX };
     addMarker(latlngX);
 
     if (markerLabelNum > 1) {
-        for (var i = 0; i < markerLabelNum - 1; i++) {
+        for (let i = 0; i < markerLabelNum - 1; i++) {
             calculateAndDisplayRoute(markers[i].getPosition(), markers[markerLabelNum - 1].getPosition());
         }
     }
@@ -45,10 +48,23 @@ function routeDisplay(map, geocoder, event) {
 }
 
 function addToSelect(toAdd) {
-    var latlngX = document.getElementById("sel");
-    var option = document.createElement("option");
+    let select = document.getElementById("select");
+    let option = document.createElement("option");
+
+    // Add onclick to a html element dynamically using javascript
+    //option.onclick = function() { alert('blah'); };
+    //option.addEventListener("click", myFunction, false);
+    option.onclick = function() { getValue(toAdd) }
+
+    option.id = toAdd;
     option.text = toAdd;
-    latlngX.add(option);
+    option.value = Math.floor(Math.random() * 100);
+    select.add(option);
+}
+
+function getValue(toAdd) {
+    selectedMarkerValue = document.getElementById(toAdd).value;
+    document.getElementById("sack").innerHTML = selectedMarkerValue;
 }
 
 function calculateAndDisplayRoute(x, y) {
@@ -62,6 +78,7 @@ function calculateAndDisplayRoute(x, y) {
                 colorIndex = 0;
             }
             directionsDisplay = new google.maps.DirectionsRenderer({
+                suppressMarkers: true,
                 polylineOptions: {
                     strokeColor: wow[colorIndex /*Math.floor(Math.random() * wow.length)*/ ]
                 }
@@ -77,7 +94,7 @@ function calculateAndDisplayRoute(x, y) {
     });
 }
 
-console.log(markers);
+console.info(markers);
 
 function addMarker(latlngX) {
     markers[markerLabelNum] = new google.maps.Marker({
