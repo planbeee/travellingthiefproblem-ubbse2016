@@ -14,19 +14,24 @@
 <body>
     <!--onload="autoSizeSelect()"> -->
     <div id="menu">
-        <button type="button">Send data</button>
+        <button type="button" onclick="removeMarker()">Send data</button>
         <button type="button">Cancel</button>
-        <select multiple='multiple' id='select' item-width="80">
+        <select multiple='multiple' id='select' item-width="80" class="markerSelect">
             
         </select>
+        <div class="dropdown">
+            <input type="image" width="150" src="http://www.freeiconspng.com/uploads/safe-icon-png-3.png" />
+            <div class="dropdown-content">
+                <p id="safe">Select a marker to see what's available</p>
+            </div>
+        </div>
+
         <div class="dropdown">
             <input type="image" width="150" src="https://www.frostriver.com/wp-content/uploads/2014/02/p-794-817-Knapsack.png" />
             <div class="dropdown-content">
                 <p id="sack">Empty!</p>
             </div>
         </div>
-        <h1 style="display: inline-block;">
-            <-Hover </h1>
     </div>
     <div id="map"></div>
 </body>
