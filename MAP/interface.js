@@ -1,56 +1,24 @@
-/* When the user clicks on the button, 
-toggle between hiding and showing the dropdown content */
-/*function myFunction() {
-    //alert("clicked")
-    document.getElementById("myDropdown").classList.toggle("show");
-}*/
+function getCucked() {
+    // Get the modal
+    var modal = document.getElementById('myModal');
 
-// Close the dropdown menu if the user clicks outside of it
-/*window.onclick = function(event) {
-        if (!event.target.matches('.dropbtn')) {
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
 
-            var dropdowns = document.getElementsByClassName("dropdown-content");
-            var i;
-            for (i = 0; i < dropdowns.length; i++) {
-                var openDropdown = dropdowns[i];
-                if (openDropdown.classList.contains('show')) {
-                    openDropdown.classList.remove('show');
-                }
-            }
-        }
-    }*/
-/*function autoSizeSelect() {
-    var select = document.getElementById('select');
-    select.size = select.length + 1;
-}*/
+    modal.style.display = "block";
 
-
-/*function myFunction() {
-    var select = document.getElementById("select");
-    var option = document.createElement("option");
-    option.text = "Kiwi";
-    select.add(option);
-    alert("Sat de sapari...");
-}*/
-
-/*google.maps.event.addListener(map, "click", function(event) {
-    var latX = event.latLng.lat();
-    var lngX = event.latLng.lng();
-    var x = { lat: latX, lng: lngX };
-    addMarker(x);
-
-    if (markerLabelNum > 1) {
-        for (var i = 0; i < markerLabelNum - 1; i++) {
-            calculateAndDisplayRoute(markers[i].getPosition(), markers[markerLabelNum - 1].getPosition());
-        }
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+        modal.style.display = "none";
+        document.getElementById("numOfItemsInput").value = 0
+        removeMarker()
     }
 
-    var x = document.getElementById("sel");
-    var option = document.createElement("option");
-    option.text = markers[markers.length - 1].getPosition();
-    x.add(option);
-
-    //if (markers[markers.length - 1].getPosition().toString == "46.556618, 23.907623") {
-    //    alert("Sat de sapari...");
-    //}
-});*/
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+            document.getElementById("numOfItemsInput").value = 0
+        }
+    }
+}

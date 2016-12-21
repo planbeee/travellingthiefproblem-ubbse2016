@@ -1,8 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <link rel="stylesheet" type="text/css" href="styles.css">
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="base.css">
+    <link rel="stylesheet" type="text/css" href="popup.css">
+    <link rel="stylesheet" type="text/css" href="dropdown.css">
 
     <!-- ez az asinc cucc nélkül halott... -->
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBL5cY3oHem0_1eSKtiNg8S7MuJ7vG-3RY&callback=initMap"></script>
@@ -12,13 +15,13 @@
 </head>
 
 <body>
-    <!--onload="autoSizeSelect()"> -->
     <div id="menu">
-        <button type="button" onclick="removeMarker()">Send data</button>
-        <button type="button">Cancel</button>
+        <button type="button" class="reactButton" onclick="">Send data</button>
+        <button type="button" class="reactButton">Cancel</button>
         <select multiple='multiple' id='select' item-width="80" class="markerSelect">
             
         </select>
+        <button type="button" class="reactButton" style="display: block;" onclick="removeMarkers()">tactical nuke incoming</button>
         <div class="dropdown">
             <input type="image" width="150" src="http://www.freeiconspng.com/uploads/safe-icon-png-3.png" />
             <div class="dropdown-content">
@@ -31,6 +34,21 @@
             <div class="dropdown-content">
                 <p id="sack">Empty!</p>
             </div>
+        </div>
+
+        <!-- The Modal -->
+        <div id="myModal" class="modal">
+
+            <!-- Modal content -->
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <form onSubmit="return false;">
+                    Number of Items:<br>
+                    <input type="number" id="numOfItemsInput" min="1" class="space">
+                    <input type="button" id="numOfItemsConf" class="reactButton" value="Confirm">
+                </form>
+            </div>
+
         </div>
     </div>
     <div id="map"></div>

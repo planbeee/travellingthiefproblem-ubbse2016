@@ -29,7 +29,7 @@
     display: block;
 }
 
-#menu button {
+.reactButton {
     height: 2.0833em;
     border: 1px solid #ccc;
     background: #f6f6f6;
@@ -47,7 +47,7 @@
     margin: .5em;
 }
 
-#menu button:hover {
+.reactButton:hover {
     -box-shadow: #999 0px 0px 3px;
     background: #F3F3F3 -webkit-gradient(linear, 0% 0%, 0% 100%, from(white), to(#EBEBEB));
     background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(white), to(#EBEBEB));
@@ -55,7 +55,7 @@
     outline: 0px;
 }
 
-#menu button:active {
+.reactButton:active {
     -box-shadow: #999 0px 0px 3px;
     background: #F3F3F3 -webkit-gradient(linear, 0% 0%, 0% 100%, from(white), to(#EBEBEB));
     background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(white), to(#EBEBEB));
@@ -67,23 +67,4 @@
     width: 74%;
     height: 100vh;
     float: right;
-}
-
-.dropdown {
-    position: relative;
-    display: inline-block;
-}
-
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #f9f9f9;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-    padding: 12px 16px;
-    z-index: 1;
-}
-
-.dropdown:hover .dropdown-content {
-    display: block;
 }
