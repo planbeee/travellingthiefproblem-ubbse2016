@@ -1,4 +1,4 @@
-function getCucked() {
+function openPopUp() {
     // Get the modal
     var modal = document.getElementById('myModal');
 

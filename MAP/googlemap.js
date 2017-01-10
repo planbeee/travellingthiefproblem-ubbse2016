@@ -31,7 +31,7 @@ function initMap() {
 
     google.maps.event.addListener(map, "click", function(event) {
         routeDisplay(map, geocoder, event)
-        setTimeout(function() { getCucked() }, 200)
+            //setTimeout(function() { openPopUp() }, 200)
     })
 }
 
@@ -86,8 +86,10 @@ function routeDisplay(map, geocoder, event) {
     addMarker(latlngX)
 
     if (markerLabelNum > 1) {
+
         for (let i = 0; i < markerLabelNum - 1; i++) {
-            setTimeout(function() { calculateAndDisplayRoute(markers[i].googleMarker.getPosition(), markers[markerLabelNum - 1].googleMarker.getPosition()) }, 0)
+            let delay = Math.floor(i / 7)
+            setTimeout(function() { calculateAndDisplayRoute(markers[i].googleMarker.getPosition(), markers[markerLabelNum - 1].googleMarker.getPosition()) }, 1000 * delay)
         }
     }
 }
@@ -117,7 +119,8 @@ function calculateAndDisplayRoute(x, y) {
             directionsDisplay[directionNum].setDirections(response)
             directionNum++
         } else if (status === google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
-            window.alert('Developer Note: Directions request failed due to ' + status + '\n1 marker has 2 geocodes: lat ang lng\nAt 5 markers we are using 10 geocodes\nThe google maps api can do 10 per second')
+            //window.alert('Developer Note: Directions request failed due to ' + status + '\n1 marker has 2 geocodes: lat ang lng\nAt 5 markers we are using 10 geocodes\nThe google maps api can do 10 per second')
+            window.alert(status);
         } else {
             window.alert('Developer Note: Directions request failed due to ' + status)
         }
