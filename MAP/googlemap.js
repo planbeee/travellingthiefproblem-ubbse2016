@@ -79,17 +79,25 @@ function checkAreaSafe(markerIndex) {
     selectedMarker = document.getElementById(markerIndex).index
 }
 
-function routeDisplay(map, geocoder, event) {
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function routeDisplay(map, geocoder, event) {
     let latX = event.latLng.lat()
     let lngX = event.latLng.lng()
     let latlngX = { lat: latX, lng: lngX }
     addMarker(latlngX)
-
+	
     if (markerLabelNum > 1) {
 
         for (let i = 0; i < markerLabelNum - 1; i++) {
-            let delay = Math.floor(i / 7)
-            setTimeout(function() { calculateAndDisplayRoute(markers[i].googleMarker.getPosition(), markers[markerLabelNum - 1].googleMarker.getPosition()) }, 1000 * delay)
+            let delay = Math.floor(i % 5)
+            //setTimeout(function() { calculateAndDisplayRoute(markers[i].googleMarker.getPosition(), markers[markerLabelNum - 1].googleMarker.getPosition()) }, 2000 * delay)
+			if ( i!=0 && delay == 0){
+				await sleep(3000)
+			}
+			calculateAndDisplayRoute(markers[i].googleMarker.getPosition(), markers[markerLabelNum - 1].googleMarker.getPosition())
         }
     }
 }
@@ -118,6 +126,7 @@ function calculateAndDisplayRoute(x, y) {
                 //console.info(response)
             directionsDisplay[directionNum].setDirections(response)
             directionNum++
+			console.log(directionNum + ' ' + directionsDisplay[directionNum-1]);
         } else if (status === google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
             //window.alert('Developer Note: Directions request failed due to ' + status + '\n1 marker has 2 geocodes: lat ang lng\nAt 5 markers we are using 10 geocodes\nThe google maps api can do 10 per second')
             window.alert(status);
@@ -179,6 +188,7 @@ function setMapOnAll(train) {
     }
 
     directionsDisplay = []
+	directionNum = 0
 }
 
 /*function geocodeLatLng(geocoder, map) {
