@@ -31,7 +31,7 @@ function initMap() {
 
     google.maps.event.addListener(map, "click", function(event) {
         routeDisplay(map, geocoder, event)
-            //setTimeout(function() { openPopUp() }, 200)
+        setTimeout(function() { openPopUp() }, 200)
     })
 }
 
