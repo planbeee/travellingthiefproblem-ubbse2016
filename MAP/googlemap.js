@@ -31,7 +31,7 @@ function initMap() {
 
     google.maps.event.addListener(map, "click", function(event) {
         routeDisplay(map, geocoder, event)
-        setTimeout(function() { openPopUp() }, 200)
+            //setTimeout(function() { openPopUp() }, 200)
     })
 }
 
@@ -46,28 +46,30 @@ function addMarker(latlngX) {
         weightOfItems[i] = Math.floor(Math.random() * 10)
     }
 
-    markers[markerLabelNum] = new marker(numberOfItems, valueOfItems, weightOfItems, new google.maps.Marker({
+    markers[markers.length] = new marker(numberOfItems, valueOfItems, weightOfItems, new google.maps.Marker({
         label: markerLabelNum.toString(),
         position: latlngX,
         map: map
     }))
 
-    addToSelect(markerLabelNum, markers[markerLabelNum])
-    markerLabelNum++
+    //addToSelect(markerLabelNum, markers[markerLabelNum])
+    addToSelect();
+    markerLabelNum++;
 }
 
-function addToSelect(index, marker) {
+//function addToSelect(index, marker) {
+function addToSelect() {
     let select = document.getElementById("select")
     let option = document.createElement("option")
 
     // Add onclick to a html element dynamically using javascript
     //option.onclick = function() { alert('blah') }
     //option.addEventListener("click", myFunction, false)
-    option.onclick = function() { checkAreaSafe(index) }
+    option.onclick = function() { checkAreaSafe(markers.length - 1) }
 
-    option.id = index
-    option.text = index
-    option.value = marker.valueOfItems + "%%%" + marker.weightOfItems
+    option.id = markers.length - 1
+    option.text = markers.length - 1
+    option.value = markers[markers.length - 1].valueOfItems + "%%%" + markers[markers.length - 1].weightOfItems
     select.add(option)
 }
 
@@ -80,7 +82,7 @@ function checkAreaSafe(markerIndex) {
 }
 
 function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 async function routeDisplay(map, geocoder, event) {
@@ -88,16 +90,22 @@ async function routeDisplay(map, geocoder, event) {
     let lngX = event.latLng.lng()
     let latlngX = { lat: latX, lng: lngX }
     addMarker(latlngX)
-	
-    if (markerLabelNum > 1) {
 
-        for (let i = 0; i < markerLabelNum - 1; i++) {
+    if (markers.length > 1) {
+        clickBlocked();
+        for (let i = 0; i < markers.length - 1; i++) {
             let delay = Math.floor(i % 5)
-            //setTimeout(function() { calculateAndDisplayRoute(markers[i].googleMarker.getPosition(), markers[markerLabelNum - 1].googleMarker.getPosition()) }, 2000 * delay)
-			if ( i!=0 && delay == 0){
-				await sleep(3000)
-			}
-			calculateAndDisplayRoute(markers[i].googleMarker.getPosition(), markers[markerLabelNum - 1].googleMarker.getPosition())
+                //setTimeout(function() { calculateAndDisplayRoute(markers[i].googleMarker.getPosition(), markers[markers.length - 1].googleMarker.getPosition()) }, 2000 * delay)
+            if (i != 0 && delay == 0) {
+                await sleep(3000)
+            }
+            calculateAndDisplayRoute(markers[i].googleMarker.getPosition(), markers[markers.length - 1].googleMarker.getPosition())
+        }
+        await sleep(1000);
+        //console.log("directionNum = " + directionNum);
+        //console.log("markerLabelNum = " + markerLabelNum);
+        if (directionNum == (markerLabelNum * (markerLabelNum - 1)) / 2) {
+            modal.style.display = "none";
         }
     }
 }
@@ -110,24 +118,27 @@ function calculateAndDisplayRoute(x, y) {
         destination: y,
         travelMode: 'WALKING'
     }, function(response, status) {
-        if (status === google.maps.GeocoderStatus.OK) {
-            if (colorIndex === wow.length) {
+        if (status == google.maps.GeocoderStatus.OK) {
+            if (colorIndex == wow.length) {
                 colorIndex = 0
             }
-            // (markerLabelNum * (markerLabelNum - 1)) / 2
+
             directionsDisplay[directionNum] = new google.maps.DirectionsRenderer({
                 suppressMarkers: true,
+                draggable: false,
                 polylineOptions: {
                     strokeColor: wow[colorIndex /*Math.floor(Math.random() * wow.length)*/ ]
                 }
             })
-            colorIndex++
-            directionsDisplay[directionNum].setMap(map)
-                //console.info(response)
-            directionsDisplay[directionNum].setDirections(response)
-            directionNum++
-			console.log(directionNum + ' ' + directionsDisplay[directionNum-1]);
-        } else if (status === google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
+            colorIndex++;
+            directionsDisplay[directionNum].setMap(map);
+            directionsDisplay[directionNum].setDirections(response);
+            directionNum++;
+            //testFunction(response);
+
+            //console.log(directionNum + ' ' + directionsDisplay[directionNum - 1]);
+
+        } else if (status == google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
             //window.alert('Developer Note: Directions request failed due to ' + status + '\n1 marker has 2 geocodes: lat ang lng\nAt 5 markers we are using 10 geocodes\nThe google maps api can do 10 per second')
             window.alert(status);
         } else {
@@ -136,27 +147,63 @@ function calculateAndDisplayRoute(x, y) {
     })
 }
 
-//utolsó marker törlése, tömbökkel bármelyik törölhető
-function removeMarker() {
-    let element
-    markers[markerLabelNum - 1].googleMarker.setMap(null)
-    element = document.getElementById(markerLabelNum - 1)
-    element.outerHTML = ""
-    delete element.text
+function testFunction(resp) {
+    console.log(resp);
+}
 
-    for (let i = directionsDisplay.length - 1; i > directionsDisplay.length - markers.length; i--) {
+//utolsó marker törlése, tömbökkel bármelyik törölhető
+function removeMarker(toRem) {
+    let element;
+    //markers[markerLabelNum - 1].googleMarker.setMap(null);
+    markers[toRem].googleMarker.setMap(null);
+    element = document.getElementById(toRem);
+    element.outerHTML = "";
+    delete element.text;
+
+    /*for (let i = 0; i < markers.length; i++) {
+        console.log(markers[i] + " ");
+    }*/
+    let toRemIndex = markers.indexOf(toRem);
+    markers.splice(toRemIndex, 1);
+
+    toRemIndex = (toRem * (toRem - 1)) / 2;
+
+    console.log("toRem: " + toRem);
+    console.log("toRemIndex: " + toRemIndex);
+    for (var i = toRemIndex; i < (toRemIndex + toRem - 1); i++) {
+        if (directionsDisplay[i] != null) {
+            //console.log("directionsDisplay[i]: " + directionsDisplay[i]);
+            console.log("i = " + i);
+            directionsDisplay[i].setMap(null);
+            //directionsDisplay[i] = null;
+        }
+    }
+
+    //directionsDisplay.splice(toRemIndex, toRem);
+
+    /*for (let i = 0; i < markers.length; i++) {
+        console.log(markers[i] + " ");
+    }*/
+    /*for (let i = markers.indexOf(toRem); i < markers.length - 2; i++) {
+        markers[i] = markers[i + 1];
+    }*/
+
+
+
+    /*for (let i = directionsDisplay.length - 1; i > directionsDisplay.length - markers.length; i--) {
         if (directionsDisplay[i] != null) {
             directionsDisplay[i].setMap(null);
             directionsDisplay[i] = null;
         }
-    }
+    }*/
+
     /*colorIndex -= directionsDisplay.length - markers.length + 2
     if (colorIndex < 0) {
         colorIndex = wow.length - (wow.length - colorIndex)
     }*/
     //directionsDisplay.length -= markers.length
     //markers.length -= 1
-    markerLabelNum--
+    //markerLabelNum--
 }
 
 
@@ -188,7 +235,7 @@ function setMapOnAll(train) {
     }
 
     directionsDisplay = []
-	directionNum = 0
+    directionNum = 0
 }
 
 /*function geocodeLatLng(geocoder, map) {

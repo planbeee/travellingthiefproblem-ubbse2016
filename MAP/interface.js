@@ -11,7 +11,7 @@ function openPopUp() {
     span.onclick = function() {
         modal.style.display = "none";
         document.getElementById("numOfItemsInput").value = 0;
-        removeMarker();
+        //removeMarker();
     }
 
     // When the user clicks anywhere outside of the modal, close it
@@ -23,17 +23,27 @@ function openPopUp() {
     }
 }
 
-function clickBlocked() {
+let modal;
+async function clickBlocked() {
     // Get the modal
-    var modal = document.getElementById('myModal');
+    modal = document.getElementById('blockModal');
 
     // Get the <span> element that closes the modal
     var span = document.getElementsByClassName("close")[0];
 
     modal.style.display = "block";
 
-    while (1 == 1) {};
+    //if (directionNum == (markerLabelNum + markerLabelNum + 1) / 2) {
+    //modal.style.display = "none";
+    //}
 
-    modal.style.display = "none";
+}
+
+function remMarkWithSel() {
+    let toRem = $("#select option:selected").text();
+
+    removeMarker(toRem);
+
+
 
 }

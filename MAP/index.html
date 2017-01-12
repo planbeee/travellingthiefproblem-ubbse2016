@@ -9,7 +9,7 @@
 
     <!-- ez az asinc cucc nélkül halott... -->
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBL5cY3oHem0_1eSKtiNg8S7MuJ7vG-3RY&callback=initMap"></script>
-    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="googleMap.js"></script>
     <script src="interface.js"></script>
 </head>
@@ -17,11 +17,12 @@
 <body>
     <div id="menu">
         <button type="button" class="reactButton" onclick="sendData()">Send data</button>
-        <button type="button" class="reactButton">Cancel</button>
+        <button type="button" class="reactButton" onclick="remMarkWithSel()">Cancel</button>
         <select multiple='multiple' id='select' item-width="80" class="markerSelect">
             
         </select>
         <button type="button" class="reactButton" style="display: block;" onclick="removeMarkers()">tactical nuke incoming</button>
+        <button type="button" class="reactButton" style="display: block;" onclick="testFunction()">test</button>
         <div class="dropdown">
             <input type="image" width="150" src="http://www.freeiconspng.com/uploads/safe-icon-png-3.png" />
             <div class="dropdown-content">
@@ -38,7 +39,6 @@
 
         <!-- The Modal -->
         <div id="myModal" class="modal">
-
             <!-- Modal content -->
             <div class="modal-content">
                 <span class="close">&times;</span>
@@ -48,8 +48,11 @@
                     <input type="button" id="numOfItemsConf" class="reactButton" value="Confirm">
                 </form>
             </div>
-
         </div>
+
+        <div id="blockModal" class="modal">
+        </div>
+
     </div>
     <div id="map"></div>
 </body>
