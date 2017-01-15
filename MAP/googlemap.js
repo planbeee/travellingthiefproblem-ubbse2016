@@ -168,15 +168,41 @@ function removeMarker(toRem) {
 
     toRemIndex = (toRem * (toRem - 1)) / 2;
 
-    console.log("toRem: " + toRem);
-    console.log("toRemIndex: " + toRemIndex);
-    for (var i = toRemIndex; i < (toRemIndex + toRem - 1); i++) {
+    //console.log("directionDisplay.length() = " + directionsDisplay.length);
+    let wher = (toRemIndex + toRem - 1);
+    for (let i = toRemIndex; i <= wher; i++) {
+        if (directionsDisplay[i] != null) {
+            //console.log("directionsDisplay[i]: " + directionsDisplay[i]);
+            //console.log("i = " + i);
+            directionsDisplay[i].setMap(null);
+            directionsDisplay[i] = null;
+        }
+    }
+    directionsDisplay.splice(toRemIndex, toRem);
+    //console.log("directionDisplay.length() = " + directionsDisplay.length);
+
+    let i = toRemIndex + toRem,
+        shift = 0;
+    if (directionsDisplay[i] != null) {
+        //console.log("directionsDisplay[i]: " + directionsDisplay[i]);
+        console.log("i = " + i);
+        directionsDisplay[i].setMap(null);
+        directionsDisplay[i] = null;
+        directionsDisplay.splice(i, 1);
+    }
+
+    i = i + toRem;
+
+    while (i < directionsDisplay.length) {
         if (directionsDisplay[i] != null) {
             //console.log("directionsDisplay[i]: " + directionsDisplay[i]);
             console.log("i = " + i);
             directionsDisplay[i].setMap(null);
-            //directionsDisplay[i] = null;
+            directionsDisplay[i] = null;
+            directionsDisplay.splice(i, 1);
         }
+        shift++;
+        i = i + toRem + shift;
     }
 
     //directionsDisplay.splice(toRemIndex, toRem);

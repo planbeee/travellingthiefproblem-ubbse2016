@@ -42,8 +42,16 @@ async function clickBlocked() {
 function remMarkWithSel() {
     let toRem = $("#select option:selected").text();
 
-    removeMarker(toRem);
+    removeMarker(Number(toRem));
+}
 
-
-
+function sendData() {
+    $.ajax({
+            method: "POST",
+            url: "http://localhost:13337/",
+            data: { name: "John", location: "Boston" }
+        })
+        .done(function(msg) {
+            alert("Data Saved: " + msg);
+        });
 }
