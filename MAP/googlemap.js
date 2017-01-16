@@ -12,8 +12,8 @@ let markers = [],
     selectedMarker = -999,
     wow = ["green", "purple", "red", "yellow", "blue", "orange", "black", "brown"]
 
-let directionsDisplay = [],
-    directionNum = 0
+let directionsDisplay = []
+    //directionNum = 0
 let directionsService
 let map
 
@@ -52,7 +52,6 @@ function addMarker(latlngX) {
         map: map
     }))
 
-    //addToSelect(markerLabelNum, markers[markerLabelNum])
     addToSelect();
     markerLabelNum++;
 }
@@ -97,14 +96,13 @@ async function routeDisplay(map, geocoder, event) {
             let delay = Math.floor(i % 5)
                 //setTimeout(function() { calculateAndDisplayRoute(markers[i].googleMarker.getPosition(), markers[markers.length - 1].googleMarker.getPosition()) }, 2000 * delay)
             if (i != 0 && delay == 0) {
-                await sleep(3000)
+                await sleep(4000)
             }
             calculateAndDisplayRoute(markers[i].googleMarker.getPosition(), markers[markers.length - 1].googleMarker.getPosition())
         }
-        await sleep(1000);
-        //console.log("directionNum = " + directionNum);
-        //console.log("markerLabelNum = " + markerLabelNum);
-        if (directionNum == (markerLabelNum * (markerLabelNum - 1)) / 2) {
+        await sleep(2000);
+
+        if (directionsDisplay.length == (markers.length * (markers.length - 1)) / 2) {
             modal.style.display = "none";
         }
     }
@@ -123,7 +121,7 @@ function calculateAndDisplayRoute(x, y) {
                 colorIndex = 0
             }
 
-            directionsDisplay[directionNum] = new google.maps.DirectionsRenderer({
+            directionsDisplay[directionsDisplay.length] = new google.maps.DirectionsRenderer({
                 suppressMarkers: true,
                 draggable: false,
                 polylineOptions: {
@@ -131,12 +129,9 @@ function calculateAndDisplayRoute(x, y) {
                 }
             })
             colorIndex++;
-            directionsDisplay[directionNum].setMap(map);
-            directionsDisplay[directionNum].setDirections(response);
-            directionNum++;
-            //testFunction(response);
-
-            //console.log(directionNum + ' ' + directionsDisplay[directionNum - 1]);
+            directionsDisplay[directionsDisplay.length - 1].setMap(map);
+            directionsDisplay[directionsDisplay.length - 1].setDirections(response);
+            //directionNum++;
 
         } else if (status == google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
             //window.alert('Developer Note: Directions request failed due to ' + status + '\n1 marker has 2 geocodes: lat ang lng\nAt 5 markers we are using 10 geocodes\nThe google maps api can do 10 per second')
@@ -148,22 +143,24 @@ function calculateAndDisplayRoute(x, y) {
 }
 
 function testFunction(resp) {
-    console.log(resp);
+    for (let i = 0; i < markers.length; i++) {
+        console.log("markers[" + i + "].googleMarker.label = " + Number(markers[i].googleMarker.label));
+    }
 }
 
 //utolsó marker törlése, tömbökkel bármelyik törölhető
 function removeMarker(toRem) {
     let element;
-    //markers[markerLabelNum - 1].googleMarker.setMap(null);
-    markers[toRem].googleMarker.setMap(null);
+
+    let toRemIndex = 0;
+    while (toRem != Number(markers[toRemIndex].googleMarker.label)) {
+        toRemIndex++;
+    }
+
     element = document.getElementById(toRem);
     element.outerHTML = "";
     delete element.text;
-
-    /*for (let i = 0; i < markers.length; i++) {
-        console.log(markers[i] + " ");
-    }*/
-    let toRemIndex = markers.indexOf(toRem);
+    markers[toRem].googleMarker.setMap(null);
     markers.splice(toRemIndex, 1);
 
     toRemIndex = (toRem * (toRem - 1)) / 2;
@@ -176,9 +173,18 @@ function removeMarker(toRem) {
             //console.log("i = " + i);
             directionsDisplay[i].setMap(null);
             directionsDisplay[i] = null;
+            //directionNum--;
         }
     }
+    for (let i = 0; i < directionsDisplay.length; i++) {
+        console.log("directionDisplay[" + i + "] = " + directionsDisplay[i]);
+    }
+    console.log("\n");
     directionsDisplay.splice(toRemIndex, toRem);
+    for (let i = 0; i < directionsDisplay.length; i++) {
+        console.log("directionDisplay[" + i + "] = " + directionsDisplay[i]);
+    }
+    //console.log("directionDisplay = " + directionsDisplay);
     //console.log("directionDisplay.length() = " + directionsDisplay.length);
 
     let i = toRemIndex + toRem,
@@ -189,6 +195,12 @@ function removeMarker(toRem) {
         directionsDisplay[i].setMap(null);
         directionsDisplay[i] = null;
         directionsDisplay.splice(i, 1);
+        // directionNum--;
+    }
+
+    console.log("\n");
+    for (let i = 0; i < directionsDisplay.length; i++) {
+        console.log("directionDisplay[" + i + "] = " + directionsDisplay[i]);
     }
 
     i = i + toRem;
@@ -200,36 +212,15 @@ function removeMarker(toRem) {
             directionsDisplay[i].setMap(null);
             directionsDisplay[i] = null;
             directionsDisplay.splice(i, 1);
+            //directionNum--;
         }
         shift++;
         i = i + toRem + shift;
     }
-
-    //directionsDisplay.splice(toRemIndex, toRem);
-
-    /*for (let i = 0; i < markers.length; i++) {
-        console.log(markers[i] + " ");
-    }*/
-    /*for (let i = markers.indexOf(toRem); i < markers.length - 2; i++) {
-        markers[i] = markers[i + 1];
-    }*/
-
-
-
-    /*for (let i = directionsDisplay.length - 1; i > directionsDisplay.length - markers.length; i--) {
-        if (directionsDisplay[i] != null) {
-            directionsDisplay[i].setMap(null);
-            directionsDisplay[i] = null;
-        }
-    }*/
-
-    /*colorIndex -= directionsDisplay.length - markers.length + 2
-    if (colorIndex < 0) {
-        colorIndex = wow.length - (wow.length - colorIndex)
-    }*/
-    //directionsDisplay.length -= markers.length
-    //markers.length -= 1
-    //markerLabelNum--
+    console.log("\n");
+    for (let i = 0; i < directionsDisplay.length; i++) {
+        console.log("directionDisplay[" + i + "] = " + directionsDisplay[i]);
+    }
 }
 
 
@@ -245,12 +236,15 @@ function clearMarkers() {
 }
 
 function setMapOnAll(train) {
-    let element
+    let element;
     for (let i = 0; i < markers.length; i++) {
-        markers[i].googleMarker.setMap(train)
-        element = document.getElementById(i)
-        element.outerHTML = ""
-        delete element.text
+        console.log("markers[" + i + "].googleMarker.label = " + Number(markers[i].googleMarker.label));
+        element = document.getElementById(Number(markers[i].googleMarker.label));
+        markers[i].googleMarker.setMap(train);
+        if (element != null) {
+            element.outerHTML = "";
+            delete element.text;
+        }
     }
 
     for (let i = 0; i < directionsDisplay.length; i++) {
@@ -260,8 +254,8 @@ function setMapOnAll(train) {
         }
     }
 
-    directionsDisplay = []
-    directionNum = 0
+    directionsDisplay = [];
+    // directionNum = 0;
 }
 
 /*function geocodeLatLng(geocoder, map) {
