@@ -1,21 +1,33 @@
 'use strict'
 
 function marker(numberOfItems, valueOfItems, weightOfItems, googleMarker) {
-    this.numberOfItems = numberOfItems
-    this.valueOfItems = valueOfItems
-    this.weightOfItems = weightOfItems
-    this.googleMarker = googleMarker
+    this.numberOfItems = numberOfItems;
+    this.valueOfItems = valueOfItems;
+    this.weightOfItems = weightOfItems;
+    this.googleMarker = googleMarker;
 }
+
+let toSend = new Array(100);
+let s = "";
+let latlngX;
+
+let valItm = [];
+let wghItm = [];
+for (let i = 0; i < 10; i++) {
+    valItm[i] = Math.floor(Math.random() * 99) + 1;
+    wghItm[i] = Math.floor(Math.random() * 40) + 10;
+}
+
 
 let markers = [],
     markerLabelNum = 0,
     selectedMarker = -999,
-    wow = ["green", "purple", "red", "yellow", "blue", "orange", "black", "brown"]
+    wow = ["green", "purple", "red", "yellow", "blue", "orange", "black", "brown"];
 
-let directionsDisplay = []
-    //directionNum = 0
-let directionsService
-let map
+let directionsDisplay = [];
+//directionNum = 0
+let directionsService;
+let map;
 
 //inicializálja a térképet
 function initMap() {
@@ -27,30 +39,33 @@ function initMap() {
     })
 
     // purpose: decode latitude and longitude to address
-    let geocoder = new google.maps.Geocoder
+    let geocoder = new google.maps.Geocoder;
 
     google.maps.event.addListener(map, "click", function(event) {
-        routeDisplay(map, geocoder, event)
-            //setTimeout(function() { openPopUp() }, 200)
+        routeDisplay(map, geocoder, event);
+        setTimeout(function() { openPopUp() }, 200);
     })
 }
 
 
-function addMarker(latlngX) {
-    let numberOfItems = Math.floor(Math.random() * 2) + 1,
+function addMarker() {
+    /*let numberOfItems = Math.floor(Math.random() * 2) + 1,
         valueOfItems = [],
-        weightOfItems = []
+        weightOfItems = [];
 
     for (let i = 0; i < numberOfItems; i++) {
         valueOfItems[i] = Math.floor(Math.random() * 100)
         weightOfItems[i] = Math.floor(Math.random() * 10)
-    }
+}*/
 
-    markers[markers.length] = new marker(numberOfItems, valueOfItems, weightOfItems, new google.maps.Marker({
+    /*markers[markers.length] = new marker(numberOfItems, valueOfItems, weightOfItems, new google.maps.Marker({
         label: markerLabelNum.toString(),
         position: latlngX,
         map: map
-    }))
+    }))*/
+
+
+    toSend[markers.length - 1] = new Array(100);
 
     addToSelect();
     markerLabelNum++;
@@ -64,7 +79,7 @@ function addToSelect() {
     // Add onclick to a html element dynamically using javascript
     //option.onclick = function() { alert('blah') }
     //option.addEventListener("click", myFunction, false)
-    option.onclick = function() { checkAreaSafe(markers.length - 1) }
+    option.onclick = function() { checkAreaSafe(parseInt($("#select option:selected").text())) }
 
     option.id = markers.length - 1
     option.text = markers.length - 1
@@ -85,10 +100,11 @@ function sleep(ms) {
 }
 
 async function routeDisplay(map, geocoder, event) {
-    let latX = event.latLng.lat()
-    let lngX = event.latLng.lng()
-    let latlngX = { lat: latX, lng: lngX }
-    addMarker(latlngX)
+    let latX = event.latLng.lat();
+    let lngX = event.latLng.lng();
+    latlngX = { lat: latX, lng: lngX };
+    //addMarker()
+    //Gather();
 
     if (markers.length > 1) {
         clickBlocked();
@@ -98,19 +114,21 @@ async function routeDisplay(map, geocoder, event) {
             if (i != 0 && delay == 0) {
                 await sleep(4000)
             }
-            calculateAndDisplayRoute(markers[i].googleMarker.getPosition(), markers[markers.length - 1].googleMarker.getPosition())
+            calculateAndDisplayRoute(markers[i].googleMarker.getPosition(), markers[markers.length - 1].googleMarker.getPosition(), i, markers.length - 1)
         }
         await sleep(2000);
 
         if (directionsDisplay.length == (markers.length * (markers.length - 1)) / 2) {
             modal.style.display = "none";
         }
+        //let yesNum = parseInt(s);
+        //console.log(s);
     }
 }
 
 let colorIndex = 0;
 
-function calculateAndDisplayRoute(x, y) {
+function calculateAndDisplayRoute(x, y, p, q) {
     directionsService.route({
         origin: x,
         destination: y,
@@ -120,6 +138,11 @@ function calculateAndDisplayRoute(x, y) {
             if (colorIndex == wow.length) {
                 colorIndex = 0
             }
+
+            //console.log("Distance: " + response.routes[0].legs[0].distance.text);
+
+            toSend[p][q] = parseInt(response.routes[0].legs[0].distance.text);
+            toSend[q][p] = parseInt(response.routes[0].legs[0].distance.text);
 
             directionsDisplay[directionsDisplay.length] = new google.maps.DirectionsRenderer({
                 suppressMarkers: true,
@@ -133,6 +156,20 @@ function calculateAndDisplayRoute(x, y) {
             directionsDisplay[directionsDisplay.length - 1].setDirections(response);
             //directionNum++;
 
+            s = "";
+
+            for (let i = 0; i < markers.length; i++) {
+                for (let j = 0; j < markers.length; j++) {
+                    if (toSend[i][j] != null) {
+                        s += toSend[i][j] + " ";
+                        //Number(toSend[i][j]);
+                        //s += (toSend[i][j]).substring(0, toSend[i][j].length - 3) + " ";
+                    } else {
+                        s += "0 ";
+                    }
+                }
+                s += "\n";
+            }
         } else if (status == google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
             //window.alert('Developer Note: Directions request failed due to ' + status + '\n1 marker has 2 geocodes: lat ang lng\nAt 5 markers we are using 10 geocodes\nThe google maps api can do 10 per second')
             window.alert(status);

@@ -10,7 +10,7 @@ function openPopUp() {
     // When the user clicks on <span> (x), close the modal
     span.onclick = function() {
         modal.style.display = "none";
-        document.getElementById("numOfItemsInput").value = 0;
+        document.getElementById("itemsSelect").value = 0;
         //removeMarker();
     }
 
@@ -18,7 +18,7 @@ function openPopUp() {
     window.onclick = function(event) {
         if (event.target == modal) {
             modal.style.display = "none";
-            document.getElementById("numOfItemsInput").value = 0;
+            document.getElementById("itemsSelect").value = 0;
         }
     }
 }
@@ -46,12 +46,55 @@ function remMarkWithSel() {
 }
 
 function sendData() {
+    function packageBuilder(markers, directionDisp) {
+        this.markers = markers;
+        this.directionDisp = directionDisp;
+    }
+
+    let toSendPackage = new packageBuilder(markers, directionsDisplay);
+
     $.ajax({
             method: "POST",
             url: "http://localhost:13337/",
-            data: { name: "John", location: "Boston" }
+            data: { sentPackage: toSendPackage, location: "Boston" }
         })
         .done(function(msg) {
             alert("Data Saved: " + msg);
         });
+}
+
+function addToPopSelect() {
+    let select = document.getElementById("itemsSelect");
+
+    for (let i = 0; i < 10; i++) {
+        let option = document.createElement("option");
+        option.id = i;
+        option.text = "Item[" + i + "]: value: " + valItm[i] + " | weight: " + wghItm[i];
+        option.value = valItm[i] + "%%%" + wghItm[i];
+
+        select.add(option);
+    }
+}
+
+function Gather() {
+    let gatherVal = [];
+    let gatherWhg = [];
+    let wut = $("#itemsSelect option:selected");
+    for (let i = 0; i < wut.length; i++) {
+        //console.log(wut[i]);
+        let markerData = document.getElementById(i).value.split("%%%");
+        gatherVal[i] = markerData[0];
+        gatherWhg[i] = markerData[1];
+    }
+
+    markers[markers.length] = new marker(wut.length, gatherVal, gatherWhg, new google.maps.Marker({
+        label: markerLabelNum.toString(),
+        position: latlngX,
+        map: map
+    }))
+
+    toSend[markers.length - 1] = new Array(100);
+
+    addToSelect();
+    markerLabelNum++;
 }

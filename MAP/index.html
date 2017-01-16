@@ -14,7 +14,7 @@
     <script src="interface.js"></script>
 </head>
 
-<body>
+<body onload="addToPopSelect()">
     <div id="menu">
         <button type="button" class="reactButton" onclick="sendData()">Send data</button>
 
@@ -45,9 +45,14 @@
             <div class="modal-content">
                 <span class="close">&times;</span>
                 <form onSubmit="return false;">
-                    Number of Items:<br>
-                    <input type="number" id="numOfItemsInput" min="1" class="space">
-                    <input type="button" id="numOfItemsConf" class="reactButton" value="Confirm">
+                    <!-- Number of Items:<br> -->
+                    <!-- <input type="number" id="numOfItemsInput" min="1" class="space"> -->
+
+                    <select multiple='multiple' id='itemsSelect' item-width="80" class="">
+                        
+                    </select>
+
+                    <input type="button" id="numOfItemsConf" class="reactButton" value="Confirm" onclick="Gather()">
                 </form>
             </div>
         </div>
