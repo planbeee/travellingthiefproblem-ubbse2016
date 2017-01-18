@@ -53,14 +53,33 @@ function sendData() {
 
     let toSendPackage = new packageBuilder(markers, directionsDisplay);
 
+
     $.ajax({
+        type: 'POST',
+        url: 'http://localhost/Thief/sendData.php',
+        data: {
+            username: $('#username').val(),
+            password: $('#password').val()
+        },
+
+        success: function(response) {
+            console.log(response);
+
+            alert(response);
+            //result = response;
+            // return response; // <- I tried that one as well
+        }
+    });
+
+    /*$.ajax({
             method: "POST",
-            url: "http://localhost:13337/",
+            //url: "http://localhost:13337/",
+            url: "http://localhost/sendData.php",
             data: { sentPackage: toSendPackage, location: "Boston" }
         })
         .done(function(msg) {
             alert("Data Saved: " + msg);
-        });
+        });*/
 }
 
 function addToPopSelect() {
