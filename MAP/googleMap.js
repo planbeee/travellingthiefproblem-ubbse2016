@@ -189,7 +189,8 @@ function calculateAndDisplayRoute(x, y, p, q) {
             //window.alert('Developer Note: Directions request failed due to ' + status + '\n1 marker has 2 geocodes: lat ang lng\nAt 5 markers we are using 10 geocodes\nThe google maps api can do 10 per second')
             window.alert(status);
         } else {
-            window.alert('Developer Note: Directions request failed due to ' + status)
+            //window.alert('Developer Note: Directions request failed due to ' + status)
+            location.reload();
         }
     })
 }
@@ -214,12 +215,36 @@ function removeMarker(toRem) {
     markers.splice(toRemIndex, 1);
 
     toRemIndex = (toRem * (toRem - 1)) / 2;
+    /*if (toRem == 0) {
+        toRemIndex = 0;
+    }*/
+    console.log("toRemIndex = " + toRemIndex);
+
     let toRemID = directionsDisplay[toRemIndex].directions.geocoded_waypoints[1].place_id;
+    if (toRem == 0) {
+        toRemID = directionsDisplay[toRemIndex].directions.geocoded_waypoints[0].place_id;
+    }
 
+    console.log("Osszes: ");
     for (let i = 0; i < directionsDisplay.length; i++) {
+        console.log("i:" + i + " ID0 = " + directionsDisplay[i].directions.geocoded_waypoints[0].place_id + " ID1 = " + directionsDisplay[i].directions.geocoded_waypoints[1].place_id)
+    }
+    console.log("Torolni:");
+    let i = toRemIndex;
+    while (i < directionsDisplay.length) {
+        //if (directionsDisplay[i] != null) {
         if (directionsDisplay[i].directions.geocoded_waypoints[1].place_id == toRemID || directionsDisplay[i].directions.geocoded_waypoints[0].place_id == toRemID) {
-
+            console.log("i:" + i + " ID0 = " + directionsDisplay[i].directions.geocoded_waypoints[0].place_id + " ID1 = " + directionsDisplay[i].directions.geocoded_waypoints[1].place_id)
+                //console.log(directionsDisplay[i]);
+                //console.log("i = " + i);
+            directionsDisplay[i].setMap(null);
+            directionsDisplay[i] = null;
+            directionsDisplay.splice(i, 1);
+            //directionNum--;
+        } else {
+            i++;
         }
+        //}
     }
 
     //console.log("directionDisplay.length() = " + directionsDisplay.length);
