@@ -7,6 +7,15 @@ function marker(numberOfItems, valueOfItems, weightOfItems, googleMarker) {
     this.googleMarker = googleMarker;
 }
 
+/*function markerG(googleM) {
+    this.googleM = googleM;
+}*/
+
+function markerF(m, mG) {
+    this.m = m;
+    this.mG = mG;
+}
+
 let toSend = new Array(100);
 let s = "";
 let latlngX;
@@ -41,12 +50,14 @@ function initMap() {
     // purpose: decode latitude and longitude to address
     let geocoder = new google.maps.Geocoder;
 
-    google.maps.event.addListener(map, "click", function(event) {
+    google.maps.event.addListener(map, 'click', function(event) {
         routeDisplay(map, geocoder, event);
         setTimeout(function() { openPopUp() }, 200);
+        //tomb[i] = obj(map, geocoder, event);
     })
 }
 
+let markerGkeeper;
 
 function addMarker() {
     /*let numberOfItems = Math.floor(Math.random() * 2) + 1,
@@ -56,19 +67,20 @@ function addMarker() {
     for (let i = 0; i < numberOfItems; i++) {
         valueOfItems[i] = Math.floor(Math.random() * 100)
         weightOfItems[i] = Math.floor(Math.random() * 10)
-}*/
+    }*/
 
-    /*markers[markers.length] = new marker(numberOfItems, valueOfItems, weightOfItems, new google.maps.Marker({
+
+    markerGkeeper = new google.maps.Marker({
         label: markerLabelNum.toString(),
         position: latlngX,
         map: map
-    }))*/
+    })
 
 
     toSend[markers.length - 1] = new Array(100);
 
-    addToSelect();
-    markerLabelNum++;
+    //addToSelect();
+    //markerLabelNum++;
 }
 
 //function addToSelect(index, marker) {
@@ -81,18 +93,19 @@ function addToSelect() {
     //option.addEventListener("click", myFunction, false)
     option.onclick = function() { checkAreaSafe(parseInt($("#select option:selected").text())) }
 
-    option.id = markers.length - 1
-    option.text = markers.length - 1
-    option.value = markers[markers.length - 1].valueOfItems + "%%%" + markers[markers.length - 1].weightOfItems
-    select.add(option)
+    option.id = markers.length - 1;
+    option.text = markers.length - 1;
+    //console.log(markers[markers.length - 1].valueOfItems);
+    option.value = markers[markers.length - 1].valueOfItems + "%%%" + markers[markers.length - 1].weightOfItems;
+    select.add(option);
 }
 
 function checkAreaSafe(markerIndex) {
-    let markerData = document.getElementById(markerIndex).value.split("%%%")
-    let selectedMarkerValue = markerData[0]
-    let selectedMarkerWeight = markerData[1]
-    document.getElementById("safe").innerHTML = "Values: " + selectedMarkerValue + "<br>Weights: " + selectedMarkerWeight
-    selectedMarker = document.getElementById(markerIndex).index
+    let markerData = document.getElementById(markerIndex).value.split("%%%");
+    let selectedMarkerValue = markerData[0];
+    let selectedMarkerWeight = markerData[1];
+    document.getElementById("safe").innerHTML = "Values: " + selectedMarkerValue + "<br>Weights: " + selectedMarkerWeight;
+    selectedMarker = document.getElementById(markerIndex).index;
 }
 
 function sleep(ms) {
@@ -103,23 +116,25 @@ async function routeDisplay(map, geocoder, event) {
     let latX = event.latLng.lat();
     let lngX = event.latLng.lng();
     latlngX = { lat: latX, lng: lngX };
-    //addMarker()
-    //Gather();
+    addMarker()
+        //Gather();
 
-    if (markers.length > 1) {
+    if (markers.length > 0) {
         clickBlocked();
-        for (let i = 0; i < markers.length - 1; i++) {
+        for (let i = 0; i < markers.length; i++) {
             let delay = Math.floor(i % 5)
                 //setTimeout(function() { calculateAndDisplayRoute(markers[i].googleMarker.getPosition(), markers[markers.length - 1].googleMarker.getPosition()) }, 2000 * delay)
             if (i != 0 && delay == 0) {
                 await sleep(4000)
             }
-            calculateAndDisplayRoute(markers[i].googleMarker.getPosition(), markers[markers.length - 1].googleMarker.getPosition(), i, markers.length - 1)
+            //calculateAndDisplayRoute(markers[i].googleMarker.getPosition(), markers[markers.length - 1].googleMarker.getPosition(), i, markers.length - 1)
+            //console.log("i = " + i);
+            calculateAndDisplayRoute(markers[i].googleMarker.getPosition(), markerGkeeper.getPosition(), i, markers.length - 1)
         }
         await sleep(2000);
 
-        if (directionsDisplay.length == (markers.length * (markers.length - 1)) / 2) {
-            modal.style.display = "none";
+        if (directionsDisplay.length == ((markers.length + 1) * (markers.length)) / 2) {
+            modalClk.style.display = "none";
         }
         //let yesNum = parseInt(s);
         //console.log(s);
@@ -180,9 +195,7 @@ function calculateAndDisplayRoute(x, y, p, q) {
 }
 
 function testFunction(resp) {
-    for (let i = 0; i < markers.length; i++) {
-        console.log("markers[" + i + "].googleMarker.label = " + Number(markers[i].googleMarker.label));
-    }
+    console.log(markers[0]);
 }
 
 //utolsó marker törlése, tömbökkel bármelyik törölhető
@@ -201,12 +214,19 @@ function removeMarker(toRem) {
     markers.splice(toRemIndex, 1);
 
     toRemIndex = (toRem * (toRem - 1)) / 2;
+    let toRemID = directionsDisplay[toRemIndex].directions.geocoded_waypoints[1].place_id;
+
+    for (let i = 0; i < directionsDisplay.length; i++) {
+        if (directionsDisplay[i].directions.geocoded_waypoints[1].place_id == toRemID || directionsDisplay[i].directions.geocoded_waypoints[0].place_id == toRemID) {
+
+        }
+    }
 
     //console.log("directionDisplay.length() = " + directionsDisplay.length);
-    let wher = (toRemIndex + toRem - 1);
+    /*let wher = (toRemIndex + toRem - 1);
     for (let i = toRemIndex; i <= wher; i++) {
         if (directionsDisplay[i] != null) {
-            //console.log("directionsDisplay[i]: " + directionsDisplay[i]);
+            console.log(directionsDisplay[i]);
             //console.log("i = " + i);
             directionsDisplay[i].setMap(null);
             directionsDisplay[i] = null;
@@ -257,7 +277,7 @@ function removeMarker(toRem) {
     console.log("\n");
     for (let i = 0; i < directionsDisplay.length; i++) {
         console.log("directionDisplay[" + i + "] = " + directionsDisplay[i]);
-    }
+    }*/
 }
 
 

@@ -1,6 +1,9 @@
+let modal;
+let modalClk;
+
 function openPopUp() {
     // Get the modal
-    var modal = document.getElementById('myModal');
+    modal = document.getElementById('myModal');
 
     // Get the <span> element that closes the modal
     var span = document.getElementsByClassName("close")[0];
@@ -23,15 +26,15 @@ function openPopUp() {
     }
 }
 
-let modal;
+
 async function clickBlocked() {
     // Get the modal
-    modal = document.getElementById('blockModal');
+    modalClk = document.getElementById('blockModal');
 
     // Get the <span> element that closes the modal
     var span = document.getElementsByClassName("close")[0];
 
-    modal.style.display = "block";
+    modalClk.style.display = "block";
 
     //if (directionNum == (markerLabelNum + markerLabelNum + 1) / 2) {
     //modal.style.display = "none";
@@ -95,25 +98,36 @@ function addToPopSelect() {
     }
 }
 
+let gatherVal = [],
+    gatherWhg = [],
+    wut;
+
 function Gather() {
-    let gatherVal = [];
-    let gatherWhg = [];
-    let wut = $("#itemsSelect option:selected");
+    gatherVal = [];
+    gatherWhg = [];
+    wut = $("#itemsSelect option:selected");
     for (let i = 0; i < wut.length; i++) {
         //console.log(wut[i]);
-        let markerData = document.getElementById(i).value.split("%%%");
+        let markerData = wut[i].value.split("%%%"); //document.getElementById(i).value.split("%%%");
         gatherVal[i] = markerData[0];
         gatherWhg[i] = markerData[1];
     }
 
-    markers[markers.length] = new marker(wut.length, gatherVal, gatherWhg, new google.maps.Marker({
-        label: markerLabelNum.toString(),
-        position: latlngX,
-        map: map
-    }))
+    //console.log(markerGkeeper);
+    markers[markers.length] = new marker(wut.length, gatherVal, gatherWhg, markerGkeeper
+        /*new google.maps.Marker({
+                label: markerLabelNum.toString(),
+                position: latlngX,
+                map: map
+            })*/
+    )
+
+
 
     toSend[markers.length - 1] = new Array(100);
 
     addToSelect();
     markerLabelNum++;
+
+    modal.style.display = "none";
 }

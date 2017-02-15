@@ -12,6 +12,12 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="googleMap.js"></script>
     <script src="interface.js"></script>
+    <script>
+        window.onerror = function myErrorHandler(errorMsg, url, lineNumber) {
+            location.reload();
+            return false;
+        }
+    </script>
 </head>
 
 <body onload="addToPopSelect()">
