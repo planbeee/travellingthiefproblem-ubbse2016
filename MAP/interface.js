@@ -14,16 +14,16 @@ function openPopUp() {
     span.onclick = function() {
         modal.style.display = "none";
         document.getElementById("itemsSelect").value = 0;
-        //removeMarker();
+        removeLastMarker();
     }
 
     // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function(event) {
+    /*window.onclick = function(event) {
         if (event.target == modal) {
             modal.style.display = "none";
             document.getElementById("itemsSelect").value = 0;
         }
-    }
+    }*/
 }
 
 
@@ -40,12 +40,6 @@ async function clickBlocked() {
     //modal.style.display = "none";
     //}
 
-}
-
-function remMarkWithSel() {
-    let toRem = $("#select option:selected").text();
-
-    removeMarker(Number(toRem));
 }
 
 function sendData() {
@@ -103,6 +97,11 @@ let gatherVal = [],
     wut;
 
 function Gather() {
+    itemsbyCities[itemsbyCities.length] = new Array(10);
+    for (let j = 0; j < 10; j++) {
+        itemsbyCities[itemsbyCities.length - 1][j] = 0;
+    }
+
     gatherVal = [];
     gatherWhg = [];
     wut = $("#itemsSelect option:selected");
@@ -111,6 +110,7 @@ function Gather() {
         let markerData = wut[i].value.split("%%%"); //document.getElementById(i).value.split("%%%");
         gatherVal[i] = markerData[0];
         gatherWhg[i] = markerData[1];
+        itemsbyCities[itemsbyCities.length - 1][wut[i].id] = 1;
     }
 
     //console.log(markerGkeeper);
@@ -122,9 +122,6 @@ function Gather() {
             })*/
     )
 
-
-
-    toSend[markers.length - 1] = new Array(100);
 
     addToSelect();
     markerLabelNum++;

@@ -7,18 +7,13 @@ function marker(numberOfItems, valueOfItems, weightOfItems, googleMarker) {
     this.googleMarker = googleMarker;
 }
 
-/*function markerG(googleM) {
-    this.googleM = googleM;
-}*/
-
-function markerF(m, mG) {
-    this.m = m;
-    this.mG = mG;
-}
-
 let toSend = new Array(100);
+for (let kar = 0; kar < 100; kar++) {
+    toSend[kar] = new Array(100);
+}
 let s = "";
 let latlngX;
+let itemsbyCities = [];
 
 let valItm = [];
 let wghItm = [];
@@ -53,34 +48,9 @@ function initMap() {
     google.maps.event.addListener(map, 'click', function(event) {
         routeDisplay(map, geocoder, event);
         setTimeout(function() { openPopUp() }, 200);
+        //setTimeout(function() { Gather() }, 300);
         //tomb[i] = obj(map, geocoder, event);
     })
-}
-
-let markerGkeeper;
-
-function addMarker() {
-    /*let numberOfItems = Math.floor(Math.random() * 2) + 1,
-        valueOfItems = [],
-        weightOfItems = [];
-
-    for (let i = 0; i < numberOfItems; i++) {
-        valueOfItems[i] = Math.floor(Math.random() * 100)
-        weightOfItems[i] = Math.floor(Math.random() * 10)
-    }*/
-
-
-    markerGkeeper = new google.maps.Marker({
-        label: markerLabelNum.toString(),
-        position: latlngX,
-        map: map
-    })
-
-
-    toSend[markers.length - 1] = new Array(100);
-
-    //addToSelect();
-    //markerLabelNum++;
 }
 
 //function addToSelect(index, marker) {
@@ -93,9 +63,8 @@ function addToSelect() {
     //option.addEventListener("click", myFunction, false)
     option.onclick = function() { checkAreaSafe(parseInt($("#select option:selected").text())) }
 
-    option.id = markers.length - 1;
-    option.text = markers.length - 1;
-    //console.log(markers[markers.length - 1].valueOfItems);
+    option.id = markerLabelNum;
+    option.text = markerLabelNum;
     option.value = markers[markers.length - 1].valueOfItems + "%%%" + markers[markers.length - 1].weightOfItems;
     select.add(option);
 }
@@ -112,26 +81,48 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+
+let markerGkeeper;
+
+
+let optRoute = [];
+let myIndex = 0;
+
 async function routeDisplay(map, geocoder, event) {
     let latX = event.latLng.lat();
     let lngX = event.latLng.lng();
     latlngX = { lat: latX, lng: lngX };
-    addMarker()
-        //Gather();
+
+
+    markerGkeeper = new google.maps.Marker({
+        label: markerLabelNum.toString(),
+        position: latlngX,
+        map: map
+    })
+
+
+    //toSend[markers.length - 1] = new Array(100);
+
+    //addToSelect();
+    //markerLabelNum++;
+
 
     if (markers.length > 0) {
         clickBlocked();
         for (let i = 0; i < markers.length; i++) {
             let delay = Math.floor(i % 5)
-                //setTimeout(function() { calculateAndDisplayRoute(markers[i].googleMarker.getPosition(), markers[markers.length - 1].googleMarker.getPosition()) }, 2000 * delay)
             if (i != 0 && delay == 0) {
-                await sleep(4000)
+                await sleep(3000); // Change back to 4000 ms
             }
-            //calculateAndDisplayRoute(markers[i].googleMarker.getPosition(), markers[markers.length - 1].googleMarker.getPosition(), i, markers.length - 1)
-            //console.log("i = " + i);
-            calculateAndDisplayRoute(markers[i].googleMarker.getPosition(), markerGkeeper.getPosition(), i, markers.length - 1)
+
+            optRoute[myIndex] = new Array(2);
+            optRoute[myIndex][0] = i;
+            optRoute[myIndex][1] = markers.length;
+            myIndex++;
+
+            calculateAndDisplayRoute(markers[i].googleMarker.getPosition(), markerGkeeper.getPosition(), i, markers.length);
         }
-        await sleep(2000);
+        await sleep(1000); // Change back to 2000 ms
 
         if (directionsDisplay.length == ((markers.length + 1) * (markers.length)) / 2) {
             modalClk.style.display = "none";
@@ -151,7 +142,7 @@ function calculateAndDisplayRoute(x, y, p, q) {
     }, function(response, status) {
         if (status == google.maps.GeocoderStatus.OK) {
             if (colorIndex == wow.length) {
-                colorIndex = 0
+                colorIndex = 0;
             }
 
             //console.log("Distance: " + response.routes[0].legs[0].distance.text);
@@ -163,28 +154,16 @@ function calculateAndDisplayRoute(x, y, p, q) {
                 suppressMarkers: true,
                 draggable: false,
                 polylineOptions: {
-                    strokeColor: wow[colorIndex /*Math.floor(Math.random() * wow.length)*/ ]
+                    strokeColor: 'red', //wow[colorIndex /*Math.floor(Math.random() * wow.length)*/ ]
+                    strokeOpacity: 0.3
                 }
-            })
+            });
+
             colorIndex++;
             directionsDisplay[directionsDisplay.length - 1].setMap(map);
             directionsDisplay[directionsDisplay.length - 1].setDirections(response);
-            //directionNum++;
 
-            s = "";
 
-            for (let i = 0; i < markers.length; i++) {
-                for (let j = 0; j < markers.length; j++) {
-                    if (toSend[i][j] != null) {
-                        s += toSend[i][j] + " ";
-                        //Number(toSend[i][j]);
-                        //s += (toSend[i][j]).substring(0, toSend[i][j].length - 3) + " ";
-                    } else {
-                        s += "0 ";
-                    }
-                }
-                s += "\n";
-            }
         } else if (status == google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
             //window.alert('Developer Note: Directions request failed due to ' + status + '\n1 marker has 2 geocodes: lat ang lng\nAt 5 markers we are using 10 geocodes\nThe google maps api can do 10 per second')
             window.alert(status);
@@ -195,116 +174,94 @@ function calculateAndDisplayRoute(x, y, p, q) {
     })
 }
 
-function testFunction(resp) {
-    console.log(markers[0]);
+function reColorRoute() {
+    let expt = [0, 3, 5, 1, 4, 2, 0];
+    let k = 0,
+        l = 1,
+        j = 0;
+    while (l < expt.length) {
+        while ((optRoute[j][0] != expt[k] || optRoute[j][1] != expt[l]) && (optRoute[j][1] != expt[k] || optRoute[j][0] != expt[l])) {
+            j++;
+            console.log("j = " + j);
+        }
+        directionsDisplay[j].polylineOptions.strokeColor = 'green';
+        directionsDisplay[j].polylineOptions.strokeOpacity = 1.0;
+        directionsDisplay[j].setMap(map);
+        console.log("Green!!!");
+        k++;
+        l++;
+        j = 0;
+    }
 }
 
-//utolsó marker törlése, tömbökkel bármelyik törölhető
-function removeMarker(toRem) {
+
+function testFunction(resp) {
+
+
+    s = "";
+    let trap = new Array(markers.length);
+    for (let mmm = 0; mmm < markers.length; mmm++) {
+        trap[mmm] = new Array(markers.length);
+    }
+
+    for (let i = 0; i < markers.length; i++) {
+        for (let j = 0; j < markers.length; j++) {
+            if (toSend[i][j] != null) {
+                s += toSend[i][j] + "   ";
+                trap[i][j] = toSend[i][j];
+                //Number(toSend[i][j]);
+                //s += (toSend[i][j]).substring(0, toSend[i][j].length - 3) + " ";
+            } else {
+                s += "0   ";
+                trap[i][j] = 0;
+            }
+        }
+        s += "\n";
+    }
+
+    let JSONObj = {
+        "WeightsOfItems": wghItm,
+        "ValuesOfItems": valItm,
+        "ItemsbyCities": itemsbyCities,
+        "Distances": trap
+    };
+    //console.log(JSONObj);
+    console.log(optRoute);
+    //console.log(toSend);
+    console.log(directionsDisplay[0]);
+    //console.log(trap);
+    let expt = [0, 3, 5, 1, 4, 2, 0];
+    let k = 0,
+        l = 1,
+        j = 0;
+    while (l < expt.length) {
+        while ((optRoute[j][0] != expt[k] && optRoute[j][1] != expt[l]) || (optRoute[j][0] != expt[l] && optRoute[j][1] != expt[k])) {
+            j++;
+        }
+        directionsDisplay[j].polylineOptions.strokeColor = 'green';
+        k++;
+        l++;
+    }
+}
+
+
+function removeLastMarker() {
     let element;
 
-    let toRemIndex = 0;
-    while (toRem != Number(markers[toRemIndex].googleMarker.label)) {
-        toRemIndex++;
-    }
+    markerGkeeper.setMap(null);
 
-    element = document.getElementById(toRem);
-    element.outerHTML = "";
-    delete element.text;
-    markers[toRem].googleMarker.setMap(null);
-    markers.splice(toRemIndex, 1);
+    let myFrom = ((markers.length) * (markers.length - 1)) / 2;
+    console.log("myFrom = " + myFrom);
+    console.log("length = " + directionsDisplay.length);
 
-    toRemIndex = (toRem * (toRem - 1)) / 2;
-    /*if (toRem == 0) {
-        toRemIndex = 0;
-    }*/
-    console.log("toRemIndex = " + toRemIndex);
+    for (let uip = myFrom; uip < directionsDisplay.length; uip++) {
+        console.log("uip = " + uip);
+        directionsDisplay[uip].setMap(null);
+        directionsDisplay[uip] = null;
+    }
+    directionsDisplay.splice(myFrom, directionsDisplay.length - myFrom);
 
-    let toRemID = directionsDisplay[toRemIndex].directions.geocoded_waypoints[1].place_id;
-    if (toRem == 0) {
-        toRemID = directionsDisplay[toRemIndex].directions.geocoded_waypoints[0].place_id;
-    }
-
-    console.log("Osszes: ");
-    for (let i = 0; i < directionsDisplay.length; i++) {
-        console.log("i:" + i + " ID0 = " + directionsDisplay[i].directions.geocoded_waypoints[0].place_id + " ID1 = " + directionsDisplay[i].directions.geocoded_waypoints[1].place_id)
-    }
-    console.log("Torolni:");
-    let i = toRemIndex;
-    while (i < directionsDisplay.length) {
-        //if (directionsDisplay[i] != null) {
-        if (directionsDisplay[i].directions.geocoded_waypoints[1].place_id == toRemID || directionsDisplay[i].directions.geocoded_waypoints[0].place_id == toRemID) {
-            console.log("i:" + i + " ID0 = " + directionsDisplay[i].directions.geocoded_waypoints[0].place_id + " ID1 = " + directionsDisplay[i].directions.geocoded_waypoints[1].place_id)
-                //console.log(directionsDisplay[i]);
-                //console.log("i = " + i);
-            directionsDisplay[i].setMap(null);
-            directionsDisplay[i] = null;
-            directionsDisplay.splice(i, 1);
-            //directionNum--;
-        } else {
-            i++;
-        }
-        //}
-    }
-
-    //console.log("directionDisplay.length() = " + directionsDisplay.length);
-    /*let wher = (toRemIndex + toRem - 1);
-    for (let i = toRemIndex; i <= wher; i++) {
-        if (directionsDisplay[i] != null) {
-            console.log(directionsDisplay[i]);
-            //console.log("i = " + i);
-            directionsDisplay[i].setMap(null);
-            directionsDisplay[i] = null;
-            //directionNum--;
-        }
-    }
-    for (let i = 0; i < directionsDisplay.length; i++) {
-        console.log("directionDisplay[" + i + "] = " + directionsDisplay[i]);
-    }
-    console.log("\n");
-    directionsDisplay.splice(toRemIndex, toRem);
-    for (let i = 0; i < directionsDisplay.length; i++) {
-        console.log("directionDisplay[" + i + "] = " + directionsDisplay[i]);
-    }
-    //console.log("directionDisplay = " + directionsDisplay);
-    //console.log("directionDisplay.length() = " + directionsDisplay.length);
-
-    let i = toRemIndex + toRem,
-        shift = 0;
-    if (directionsDisplay[i] != null) {
-        //console.log("directionsDisplay[i]: " + directionsDisplay[i]);
-        console.log("i = " + i);
-        directionsDisplay[i].setMap(null);
-        directionsDisplay[i] = null;
-        directionsDisplay.splice(i, 1);
-        // directionNum--;
-    }
-
-    console.log("\n");
-    for (let i = 0; i < directionsDisplay.length; i++) {
-        console.log("directionDisplay[" + i + "] = " + directionsDisplay[i]);
-    }
-
-    i = i + toRem;
-
-    while (i < directionsDisplay.length) {
-        if (directionsDisplay[i] != null) {
-            //console.log("directionsDisplay[i]: " + directionsDisplay[i]);
-            console.log("i = " + i);
-            directionsDisplay[i].setMap(null);
-            directionsDisplay[i] = null;
-            directionsDisplay.splice(i, 1);
-            //directionNum--;
-        }
-        shift++;
-        i = i + toRem + shift;
-    }
-    console.log("\n");
-    for (let i = 0; i < directionsDisplay.length; i++) {
-        console.log("directionDisplay[" + i + "] = " + directionsDisplay[i]);
-    }*/
 }
-
 
 function removeMarkers() {
     clearMarkers()
