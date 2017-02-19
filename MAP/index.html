@@ -1,38 +1,71 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <link rel="stylesheet" type="text/css" href="styles.css">
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="base.css">
+    <link rel="stylesheet" type="text/css" href="popup.css">
+    <link rel="stylesheet" type="text/css" href="dropdown.css">
 
     <!-- ez az asinc cucc nélkül halott... -->
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBL5cY3oHem0_1eSKtiNg8S7MuJ7vG-3RY&callback=initMap"></script>
-    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="googleMap.js"></script>
     <script src="interface.js"></script>
+    <script>
+        window.onerror = function myErrorHandler(errorMsg, url, lineNumber) {
+            //location.reload();
+            //return false;
+        }
+    </script>
 </head>
 
-<body>
-    <!--onload="autoSizeSelect()"> -->
+<body onload="addToPopSelect()">
     <div id="menu">
-        <button type="button">Send data</button>
-        <button type="button">Cancel</button>
-        <select multiple='multiple' id='sel'>
-          <option value="adc">Marksman</option>
-          <option value="sup">Support</option>
-          <option value="mid">Middle</option>
-		  <option value="adc">Marksman</option>
-          <option value="sup">Support</option>
-          <option value="mid">Middle</option>
-		  <option value="adc">Marksman</option>
-          <option value="sup">Support</option>
-          <option value="mid">Middle</option>
-		  <option value="adc">Marksman</option>
-          <option value="sup">Support</option>
-          <option value="mid">Middle</option>
-		  <option value="adc">Marksman</option>
-          <option value="sup">Support</option>
-          <option value="mid">Middle</option>
+        <button type="button" class="reactButton" onclick="sendData()">Send data</button>
+
+        <select multiple='multiple' id='select' item-width="80" class="markerSelect">
+            
         </select>
+
+        <button type="button" class="reactButton" onclick="reColorRoute()">Solve</button>
+        <button type="button" class="reactButton" style="display: block;" onclick="removeMarkers()">tactical nuke incoming</button>
+        <button type="button" class="reactButton" style="display: block;" onclick="testFunction()">test</button>
+        <div class="dropdown">
+            <input type="image" width="150" src="http://www.freeiconspng.com/uploads/safe-icon-png-3.png" />
+            <div class="dropdown-content">
+                <p id="safe">Select a marker to see what's available</p>
+            </div>
+        </div>
+
+        <div class="dropdown">
+            <input type="image" width="150" src="https://www.frostriver.com/wp-content/uploads/2014/02/p-794-817-Knapsack.png" />
+            <div class="dropdown-content">
+                <p id="sack">Empty!</p>
+            </div>
+        </div>
+
+        <!-- The Modal -->
+        <div id="myModal" class="modal">
+            <!-- Modal content -->
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <form onSubmit="return false;">
+                    <!-- Number of Items:<br> -->
+                    <!-- <input type="number" id="numOfItemsInput" min="1" class="space"> -->
+
+                    <select multiple='multiple' id='itemsSelect' item-width="80" class="">
+                        
+                    </select>
+
+                    <input type="button" id="numOfItemsConf" class="reactButton" value="Confirm" onclick="Gather()">
+                </form>
+            </div>
+        </div>
+
+        <div id="blockModal" class="modal">
+        </div>
+
     </div>
     <div id="map"></div>
 </body>
