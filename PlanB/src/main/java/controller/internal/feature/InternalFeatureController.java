@@ -22,7 +22,7 @@ public class InternalFeatureController {
     @Autowired
     IFeatureService featureService;
 
-    @RequestMapping("/")
+    @RequestMapping(value ="/", method = RequestMethod.GET)
     public String index() {
         return "Hello from PlanB!";
     }
