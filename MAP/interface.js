@@ -1,21 +1,13 @@
-let modal;
-let modalClk;
-
 function openPopUp() {
-    // Get the modal
-    modal = document.getElementById('myModal');
-
-    // Get the <span> element that closes the modal
-    var span = document.getElementsByClassName("close")[0];
-
-    modal.style.display = "block";
+	//show the modal
+	$('#myModal').fadeIn(300);
 
     // When the user clicks on <span> (x), close the modal
-    span.onclick = function() {
-        modal.style.display = "none";
-        document.getElementById("itemsSelect").value = 0;
+    $('#close').click(function() {
+        $('#myModal').fadeOut(300);  // hide the modal;
+        //document.getElementById("itemsSelect").value = 0;
         removeLastMarker();
-    }
+    })
 
     // When the user clicks anywhere outside of the modal, close it
     /*window.onclick = function(event) {
@@ -28,18 +20,8 @@ function openPopUp() {
 
 
 async function clickBlocked() {
-    // Get the modal
-    modalClk = document.getElementById('blockModal');
-
-    // Get the <span> element that closes the modal
-    var span = document.getElementsByClassName("close")[0];
-
-    modalClk.style.display = "block";
-
-    //if (directionNum == (markerLabelNum + markerLabelNum + 1) / 2) {
-    //modal.style.display = "none";
-    //}
-
+    // Block the user from interaction whit the map
+    $('#blockModal').fadeIn(250);
 }
 
 function sendData() {
@@ -126,5 +108,5 @@ function Gather() {
     addToSelect();
     markerLabelNum++;
 
-    modal.style.display = "none";
+    $('#myModal').fadeOut(300);
 }

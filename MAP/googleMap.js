@@ -7,6 +7,14 @@ function marker(numberOfItems, valueOfItems, weightOfItems, googleMarker) {
     this.googleMarker = googleMarker;
 }
 
+function roads(beg, end, dir) {
+    this.beg = beg;
+    this.end = end;
+    this.dir = dir;
+}
+
+let myDir = [];
+
 let toSend = new Array(100);
 for (let kar = 0; kar < 100; kar++) {
     toSend[kar] = new Array(100);
@@ -43,13 +51,14 @@ function initMap() {
     })
 
     // purpose: decode latitude and longitude to address
-    let geocoder = new google.maps.Geocoder;
+    //let geocoder = new google.maps.Geocoder;
 
     google.maps.event.addListener(map, 'click', function(event) {
-        routeDisplay(map, geocoder, event);
+        let latX = event.latLng.lat();
+        let lngX = event.latLng.lng();
+        latlngX = { lat: latX, lng: lngX };
         setTimeout(function() { openPopUp() }, 200);
-        //setTimeout(function() { Gather() }, 300);
-        //tomb[i] = obj(map, geocoder, event);
+        routeDisplay(map, event);
     })
 }
 
@@ -88,7 +97,7 @@ let markerGkeeper;
 let optRoute = [];
 let myIndex = 0;
 
-async function routeDisplay(map, geocoder, event) {
+async function routeDisplay(map, event) {
     let latX = event.latLng.lat();
     let lngX = event.latLng.lng();
     latlngX = { lat: latX, lng: lngX };
@@ -125,7 +134,7 @@ async function routeDisplay(map, geocoder, event) {
         await sleep(1000); // Change back to 2000 ms
 
         if (directionsDisplay.length == ((markers.length + 1) * (markers.length)) / 2) {
-            modalClk.style.display = "none";
+            $('#blockModal').fadeOut(250);
         }
         //let yesNum = parseInt(s);
         //console.log(s);
@@ -159,16 +168,17 @@ function calculateAndDisplayRoute(x, y, p, q) {
                 }
             });
 
+            myDir[myDir.length] = new roads(p, q, directionsDisplay[directionsDisplay.length - 1]);
+
             colorIndex++;
             directionsDisplay[directionsDisplay.length - 1].setMap(map);
             directionsDisplay[directionsDisplay.length - 1].setDirections(response);
 
 
         } else if (status == google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
-            //window.alert('Developer Note: Directions request failed due to ' + status + '\n1 marker has 2 geocodes: lat ang lng\nAt 5 markers we are using 10 geocodes\nThe google maps api can do 10 per second')
             window.alert(status);
         } else {
-            //window.alert('Developer Note: Directions request failed due to ' + status)
+            //window.alert(status)
             location.reload();
         }
     })
@@ -180,7 +190,7 @@ function reColorRoute() {
         l = 1,
         j = 0;
     while (l < expt.length) {
-        while ((optRoute[j][0] != expt[k] || optRoute[j][1] != expt[l]) && (optRoute[j][1] != expt[k] || optRoute[j][0] != expt[l])) {
+        while ((myDir[j].beg != expt[k] || myDir[j].end != expt[l]) && (myDir[j].end != expt[k] || myDir[j].beg != expt[l])) {
             j++;
             console.log("j = " + j);
         }
@@ -294,9 +304,4 @@ function setMapOnAll(train) {
     }
 
     directionsDisplay = [];
-    // directionNum = 0;
 }
-
-/*function geocodeLatLng(geocoder, map) {
-
-}*/
