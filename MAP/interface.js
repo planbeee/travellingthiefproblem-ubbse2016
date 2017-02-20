@@ -35,10 +35,9 @@ function sendData() {
 
     $.ajax({
         type: 'POST',
-        url: 'http://localhost/Thief/sendData.php',
+        url: 'http://localhost:8080',
         data: {
-            username: $('#username').val(),
-            password: $('#password').val()
+            username: 'imi'
         },
 
         success: function(response) {
