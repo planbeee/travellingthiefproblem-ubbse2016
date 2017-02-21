@@ -38,6 +38,22 @@ async function clickBlocked() {
 let valItm = [],
     wghItm = [];
 
+$.ajax({
+    type: 'POST',
+    url: 'http://localhost:8080',
+    data: {
+        send: JSONObj
+    },
+
+    success: function(response) {
+        console.log(response);
+
+        alert(response);
+        //result = response;
+        // return response; // <- I tried that one as well
+    }
+});
+
 function addToPopSelect() {
     for (let i = 0; i < 10; i++) {
         valItm[i] = Math.floor(Math.random() * 99) + 1;

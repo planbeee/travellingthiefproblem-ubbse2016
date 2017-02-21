@@ -14,7 +14,7 @@ public class InternalItemController {
 
     private Logger LOG = Logger.getLogger(InternalItemController.class.getName());
 
-    @RequestMapping(value = "", method = RequestMethod.GET)
+    @RequestMapping(value = "", method = RequestMethod.POST)
     public ResponseEntity getItems() {
     	HttpHeaders responseHeaders = new HttpHeaders();
     	responseHeaders.set("Access-Control-Allow-Origin", "*");
