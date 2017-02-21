@@ -1,11 +1,13 @@
+// ============================================
+// Opening the PopUp where you select the items
+// ============================================
 function openPopUp() {
-	//show the modal
-	$('#myModal').fadeIn(300);
+    //show the modal
+    $('#myModal').fadeIn(300);
 
     // When the user clicks on <span> (x), close the modal
     $('#close').click(function() {
-        $('#myModal').fadeOut(300);  // hide the modal;
-        //document.getElementById("itemsSelect").value = 0;
+        $('#myModal').fadeOut(300);
         removeLastMarker();
     })
 
@@ -19,49 +21,29 @@ function openPopUp() {
 }
 
 
+// ==============================================================
+// Bringing up the PopUp that is the transparent black background
+// that blocks clicks on the map while the routes are calculated
+// Block the user from interacting with the map
+// ==============================================================
 async function clickBlocked() {
-    // Block the user from interaction whit the map
     $('#blockModal').fadeIn(250);
 }
 
-function sendData() {
-    function packageBuilder(markers, directionDisp) {
-        this.markers = markers;
-        this.directionDisp = directionDisp;
-    }
 
-    let toSendPackage = new packageBuilder(markers, directionsDisplay);
-
-
-    $.ajax({
-        type: 'POST',
-        url: 'http://localhost/Thief/sendData.php',
-        data: {
-            username: $('#username').val(),
-            password: $('#password').val()
-        },
-
-        success: function(response) {
-            console.log(response);
-
-            alert(response);
-            //result = response;
-            // return response; // <- I tried that one as well
-        }
-    });
-
-    /*$.ajax({
-            method: "POST",
-            //url: "http://localhost:13337/",
-            url: "http://localhost/sendData.php",
-            data: { sentPackage: toSendPackage, location: "Boston" }
-        })
-        .done(function(msg) {
-            alert("Data Saved: " + msg);
-        });*/
-}
+// ================================================================
+// Generate and add the values and weights of items to the <SELECT>
+// that is the PopUp which comes up when the map is clicked
+// ================================================================
+let valItm = [],
+    wghItm = [];
 
 function addToPopSelect() {
+    for (let i = 0; i < 10; i++) {
+        valItm[i] = Math.floor(Math.random() * 99) + 1;
+        wghItm[i] = Math.floor(Math.random() * 40) + 10;
+    }
+
     let select = document.getElementById("itemsSelect");
 
     for (let i = 0; i < 10; i++) {
@@ -74,11 +56,17 @@ function addToPopSelect() {
     }
 }
 
-let gatherVal = [],
-    gatherWhg = [],
-    wut;
+
+// ================================================================================
+// Gather the values and weights of items selected by user to be sent to the server
+// ================================================================================
+let itemsbyCities = [];
 
 function Gather() {
+    let gatherItm,
+        gatherVal = [],
+        gatherWhg = [];
+
     itemsbyCities[itemsbyCities.length] = new Array(10);
     for (let j = 0; j < 10; j++) {
         itemsbyCities[itemsbyCities.length - 1][j] = 0;
@@ -86,17 +74,16 @@ function Gather() {
 
     gatherVal = [];
     gatherWhg = [];
-    wut = $("#itemsSelect option:selected");
-    for (let i = 0; i < wut.length; i++) {
-        //console.log(wut[i]);
-        let markerData = wut[i].value.split("%%%"); //document.getElementById(i).value.split("%%%");
+    gatherItm = $("#itemsSelect option:selected");
+    for (let i = 0; i < gatherItm.length; i++) {
+        //console.log(gatherItm[i]);
+        let markerData = gatherItm[i].value.split("%%%");
         gatherVal[i] = markerData[0];
         gatherWhg[i] = markerData[1];
-        itemsbyCities[itemsbyCities.length - 1][wut[i].id] = 1;
+        itemsbyCities[itemsbyCities.length - 1][gatherItm[i].id] = 1;
     }
 
-    //console.log(markerGkeeper);
-    markers[markers.length] = new marker(wut.length, gatherVal, gatherWhg, markerGkeeper
+    markers[markers.length] = new marker(gatherItm.length, gatherVal, gatherWhg, markerKeeper
         /*new google.maps.Marker({
                 label: markerLabelNum.toString(),
                 position: latlngX,
@@ -109,4 +96,34 @@ function Gather() {
     markerLabelNum++;
 
     $('#myModal').fadeOut(300);
+}
+
+
+// ====================================================
+// Sending the data gathered from the map to the server
+// ====================================================
+function sendData() {
+    function packageBuilder(markers, directionDisp) {
+        this.markers = markers;
+        this.directionDisp = directionDisp;
+    }
+
+    let toSendPackage = new packageBuilder(markers, directionsDisplay);
+
+
+    $.ajax({
+        type: 'POST',
+        url: 'http://localhost:8080',
+        data: {
+            send: JSONObj
+        },
+
+        success: function(response) {
+            console.log(response);
+
+            alert(response);
+            //result = response;
+            // return response; // <- I tried that one as well
+        }
+    });
 }
