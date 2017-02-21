@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpHeaders;
 
 @RestController
 @RequestMapping("/")
@@ -15,8 +16,10 @@ public class InternalItemController {
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public ResponseEntity getItems() {
+    	HttpHeaders responseHeaders = new HttpHeaders();
+    	responseHeaders.set("Access-Control-Allow-Origin", "*");
 
-        return new ResponseEntity<String>("HELLO", HttpStatus.OK);
+        return new ResponseEntity<String>("HELLO", responseHeaders, HttpStatus.OK);
 
     }
 }
