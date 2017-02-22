@@ -1,3 +1,4 @@
 *.exe
 PlanB/.idea/*
 PlanB/target/*
+PlanB/.metadata/*
