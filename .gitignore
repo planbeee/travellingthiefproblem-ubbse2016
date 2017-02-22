@@ -2,3 +2,7 @@
 PlanB/.idea/*
 PlanB/target/*
 PlanB/.metadata/*
+PlanB/.settings/*
+PlanB/.classpath
+PlanB/.gitignore
+PlanB/.project
