@@ -38,22 +38,6 @@ async function clickBlocked() {
 let valItm = [],
     wghItm = [];
 
-$.ajax({
-    type: 'POST',
-    url: 'http://localhost:8080',
-    data: {
-        send: JSONObj
-    },
-
-    success: function(response) {
-        console.log(response);
-
-        alert(response);
-        //result = response;
-        // return response; // <- I tried that one as well
-    }
-});
-
 function addToPopSelect() {
     for (let i = 0; i < 10; i++) {
         valItm[i] = Math.floor(Math.random() * 99) + 1;
@@ -118,13 +102,15 @@ function Gather() {
 // ====================================================
 // Sending the data gathered from the map to the server
 // ====================================================
+let expt = [];
+
 function sendData() {
-    function packageBuilder(markers, directionDisp) {
+    function packageBuilder(markers, directionDisplay) {
         this.markers = markers;
-        this.directionDisp = directionDisp;
+        this.directionDisplay = directionDisplay;
     }
 
-    let toSendPackage = new packageBuilder(markers, directionsDisplay);
+    let toSendPackage = new packageBuilder(markers, directionDisplay);
 
 
     $.ajax({
@@ -135,11 +121,9 @@ function sendData() {
         },
 
         success: function(response) {
-            console.log(response);
-
-            alert(response);
-            //result = response;
-            // return response; // <- I tried that one as well
+            for (let i = 0; i < response.length; i++) {
+                expt[i] = parseInt(response[i]);
+            }
         }
     });
 }

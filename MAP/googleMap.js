@@ -16,9 +16,9 @@ function marker(numberOfItems, valueOfItems, weightOfItems, googleMarker) {
 
 
 // ========================================
-// Template for directionsDisplay instances
+// Template for directionDisplay instances
 // ========================================
-let directionsDisplay = [],
+let directionDisplay = [],
     directionsService,
     map;
 
@@ -115,13 +115,13 @@ async function routeDisplay(map, event) {
         }
         await sleep(1000); // Change back to 2000 ms
 
-        if (directionsDisplay.length == ((markers.length + 1) * (markers.length)) / 2) {
+        if (directionDisplay.length == ((markers.length + 1) * (markers.length)) / 2) {
             $('#blockModal').fadeOut(250);
         }
     }
 }
 
-let myDir = [];
+//let directionDisplay = [];
 
 function calculateAndDisplayRoute(x, y, p, q) {
     directionsService.route({
@@ -143,7 +143,7 @@ function calculateAndDisplayRoute(x, y, p, q) {
             toSend[p][q] = parseInt(response.routes[0].legs[0].distance.text);
             toSend[q][p] = parseInt(response.routes[0].legs[0].distance.text);
 
-            directionsDisplay[directionsDisplay.length] = new google.maps.DirectionsRenderer({
+            /*directionsDisplay[directionsDisplay.length] = new google.maps.DirectionsRenderer({
                 suppressMarkers: true,
                 draggable: false,
                 polylineOptions: {
@@ -151,12 +151,21 @@ function calculateAndDisplayRoute(x, y, p, q) {
                     strokeOpacity: 0.3,
                     strokeWeight: 7
                 }
-            });
+            });*/
 
-            myDir[myDir.length] = new roads(p, q, directionsDisplay[directionsDisplay.length - 1]);
+            // directionDisplay[directionDisplay.length] = new roads(p, q, directionDisplay[directionDisplay.length - 1]);
+            directionDisplay[directionDisplay.length] = new roads(p, q, new google.maps.DirectionsRenderer({
+                suppressMarkers: true,
+                draggable: false,
+                polylineOptions: {
+                    strokeColor: 'red',
+                    strokeOpacity: 0.3,
+                    strokeWeight: 7
+                }
+            }));
 
-            directionsDisplay[directionsDisplay.length - 1].setMap(map);
-            directionsDisplay[directionsDisplay.length - 1].setDirections(response);
+            directionDisplay[directionDisplay.length - 1].dir.setMap(map);
+            directionDisplay[directionDisplay.length - 1].dir.setDirections(response);
 
 
         } else if (status == google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
@@ -173,19 +182,19 @@ function calculateAndDisplayRoute(x, y, p, q) {
 // Colors the optimal path to green
 // ================================
 function reColorRoute() {
-    let expt = [0, 3, 5, 1, 4, 2, 0];
+    //expt = [0, 3, 5, 1, 4, 2, 0];
     let k = 0,
         l = 1,
         j = 0;
     while (l < expt.length) {
-        while ((myDir[j].beg != expt[k] || myDir[j].end != expt[l]) && (myDir[j].end != expt[k] || myDir[j].beg != expt[l])) {
+        while ((directionDisplay[j].beg != expt[k] || directionDisplay[j].end != expt[l]) && (directionDisplay[j].end != expt[k] || directionDisplay[j].beg != expt[l])) {
             j++;
             console.log("j = " + j);
         }
-        directionsDisplay[j].polylineOptions.strokeColor = 'green';
-        directionsDisplay[j].polylineOptions.strokeOpacity = 1.0;
-        directionsDisplay[j].polylineOptions.strokeWeight = 3;
-        directionsDisplay[j].setMap(map);
+        directionDisplay[j].dir.polylineOptions.strokeColor = 'green';
+        directionDisplay[j].dir.polylineOptions.strokeOpacity = 1.0;
+        directionDisplay[j].dir.polylineOptions.strokeWeight = 3;
+        directionDisplay[j].dir.setMap(map);
         console.log("Green!!!");
         k++;
         l++;
@@ -229,7 +238,7 @@ function testFunction(resp) {
     };
     console.log(JSONObj);
     //console.log(toSend);
-    //console.log(directionsDisplay[0]);
+    //console.log(directionDisplay[0]);
     //console.log(distMatrix);
     console.log(s);
 }
@@ -243,11 +252,11 @@ function removeLastMarker() {
 
     let remIndex = ((markers.length) * (markers.length - 1)) / 2;
 
-    for (let i = remIndex; i < directionsDisplay.length; i++) {
-        directionsDisplay[i].setMap(null);
-        directionsDisplay[i] = null;
+    for (let i = remIndex; i < directionDisplay.length; i++) {
+        directionDisplay[i].dir.setMap(null);
+        directionDisplay[i] = null;
     }
-    directionsDisplay.splice(remIndex, directionsDisplay.length - remIndex);
+    directionDisplay.splice(remIndex, directionDisplay.length - remIndex);
 
 }
 
@@ -278,12 +287,12 @@ function setMapOnAll(train) {
         }
     }
 
-    for (let i = 0; i < directionsDisplay.length; i++) {
-        if (directionsDisplay[i] != null) {
-            directionsDisplay[i].setMap(null);
-            directionsDisplay[i] = null;
+    for (let i = 0; i < directionDisplay.length; i++) {
+        if (directionDisplay[i].dir != null) {
+            directionDisplay[i].dir.setMap(null);
+            directionDisplay[i] = null;
         }
     }
 
-    directionsDisplay = [];
+    directionDisplay = [];
 }
