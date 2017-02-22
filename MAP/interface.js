@@ -105,20 +105,48 @@ function Gather() {
 let expt = [];
 
 function sendData() {
-    function packageBuilder(markers, directionDisplay) {
-        this.markers = markers;
-        this.directionDisplay = directionDisplay;
+
+    let s = "";
+    distMatrix = new Array(markers.length);
+
+    for (let i = 0; i < markers.length; i++) {
+        distMatrix[i] = new Array(markers.length);
     }
 
-    let toSendPackage = new packageBuilder(markers, directionDisplay);
+    for (let i = 0; i < markers.length; i++) {
+        for (let j = 0; j < markers.length; j++) {
+            if (toSend[i][j] != null) {
+                s += toSend[i][j] + "   ";
+                distMatrix[i][j] = toSend[i][j];
+            } else {
+                s += "0   ";
+                distMatrix[i][j] = 0;
+            }
+        }
+        s += "\n";
+    }
 
+    var adat = 'Weight=' +
+        encodeURIComponent(wghItm) +
+        '&Value=' +
+        encodeURIComponent(valItm) +
+        '&ItemsbyCities=' +
+        encodeURIComponent(itemsbyCities) +
+        '&ItemsLength=' +
+        encodeURIComponent(itemsbyCities[0].length) +
+        '&Distances=' +
+        encodeURIComponent(distMatrix) +
+        '&DistLength=' +
+        encodeURIComponent(distMatrix[0].length);
 
     $.ajax({
         type: 'POST',
-        url: 'http://localhost:8080',
-        data: {
+        url: 'http://localhost:8080/',
+        /*data: {
             send: JSONObj
-        },
+        },*/
+
+        data: adat,
 
         success: function(response) {
             for (let i = 0; i < response.length; i++) {

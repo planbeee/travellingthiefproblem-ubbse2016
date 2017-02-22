@@ -121,7 +121,7 @@ async function routeDisplay(map, event) {
     }
 }
 
-//let directionDisplay = [];
+
 
 function calculateAndDisplayRoute(x, y, p, q) {
     directionsService.route({
@@ -208,27 +208,9 @@ function reColorRoute() {
 // Right now builds the Obj to be sent and console.log()'s things
 // ============================================================== 
 let JSONObj;
+let distMatrix = [];
 
 function testFunction(resp) {
-    let s = "";
-    let distMatrix = new Array(markers.length);
-
-    for (let i = 0; i < markers.length; i++) {
-        distMatrix[i] = new Array(markers.length);
-    }
-
-    for (let i = 0; i < markers.length; i++) {
-        for (let j = 0; j < markers.length; j++) {
-            if (toSend[i][j] != null) {
-                s += toSend[i][j] + "   ";
-                distMatrix[i][j] = toSend[i][j];
-            } else {
-                s += "0   ";
-                distMatrix[i][j] = 0;
-            }
-        }
-        s += "\n";
-    }
 
     JSONObj = {
         "WeightsOfItems": wghItm,
@@ -240,7 +222,7 @@ function testFunction(resp) {
     //console.log(toSend);
     //console.log(directionDisplay[0]);
     //console.log(distMatrix);
-    console.log(s);
+    //console.log(s);
 }
 
 
