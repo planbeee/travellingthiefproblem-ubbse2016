@@ -149,9 +149,20 @@ function sendData() {
         data: adat,
 
         success: function(response) {
-            for (let i = 0; i < response.length; i++) {
-                expt[i] = parseInt(response[i]);
+            let citiesWthItems = response.split(":");
+            let citiesAndItems = [];
+            let sackText = "";
+            for (let i = 0; i < citiesWthItems.length; i++) {
+                citiesAndItems[i] = citiesWthItems[i].split(".");
+                expt[i] = parseInt(citiesAndItems[i][0]);
+                sackText += "City: " + citiesAndItems[i][0] + "<br>Values: ";
+
+                for (let j = 1; j < citiesAndItems[i].length; j++) {
+                    sackText += citiesAndItems[i][j] + " ";
+                }
+                sackText += "<br><br>";
             }
+            document.getElementById("sack").innerHTML = sackText;
         }
     });
 }
