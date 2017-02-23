@@ -76,7 +76,6 @@ function Gather() {
     gatherWhg = [];
     gatherItm = $("#itemsSelect option:selected");
     for (let i = 0; i < gatherItm.length; i++) {
-        //console.log(gatherItm[i]);
         let markerData = gatherItm[i].value.split("%%%");
         gatherVal[i] = markerData[0];
         gatherWhg[i] = markerData[1];
@@ -126,9 +125,28 @@ function sendData() {
         s += "\n";
     }
 
+    let k = 0,
+        l = 1,
+        j = 0;
+
+    while (l < expt.length) {
+        while ((directionDisplay[j].beg != expt[k] || directionDisplay[j].end != expt[l]) && (directionDisplay[j].end != expt[k] || directionDisplay[j].beg != expt[l])) {
+            j++;
+        }
+
+        directionDisplay[j].dir.polylineOptions.strokeColor = 'red';
+        directionDisplay[j].dir.polylineOptions.strokeOpacity = 0.3;
+        directionDisplay[j].dir.polylineOptions.strokeWeight = 7;
+        directionDisplay[j].dir.setMap(map);
+        k++;
+        l++;
+        j = 0;
+    }
+
+
     var adat = 'AlgType=' +
         encodeURIComponent(algType) +
-        'Weight=' +
+        '&Weight=' +
         encodeURIComponent(wghItm) +
         '&Value=' +
         encodeURIComponent(valItm) +
@@ -144,13 +162,10 @@ function sendData() {
     $.ajax({
         type: 'POST',
         url: 'http://localhost:8080/',
-        /*data: {
-            send: JSONObj
-        },*/
-
         data: adat,
 
         success: function(response) {
+            expt = [];
             let citiesWthItems = response.split(":");
             let citiesAndItems = [];
             let sackText = "";
@@ -165,6 +180,7 @@ function sendData() {
                 sackText += "<br><br>";
             }
             document.getElementById("sack").innerHTML = sackText;
+            expt[expt.length] = expt[0];
         }
     });
 }
