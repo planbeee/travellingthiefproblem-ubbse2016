@@ -126,7 +126,9 @@ function sendData() {
         s += "\n";
     }
 
-    var adat = 'Weight=' +
+    var adat = 'AlgType=' +
+        encodeURIComponent(algType) +
+        'Weight=' +
         encodeURIComponent(wghItm) +
         '&Value=' +
         encodeURIComponent(valItm) +

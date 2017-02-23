@@ -246,9 +246,11 @@ function testFunction(resp) {
 
 }
 
+
+let algType = 0;
 $(function() {
     $('#algChoice input').on('change', function() {
-        alert($('input[name=solution]:checked', '#algChoice').val());
+        algType = $('input[name=solution]:checked', '#algChoice').val();
     });
 });
 
