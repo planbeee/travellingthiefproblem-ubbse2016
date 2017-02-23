@@ -58,7 +58,7 @@ public class GreedyKnapsack {
         }
         total = m;
         for (j = 0; j < profit.length; j++) {
-            if (weight[j] <= total) {
+            if (weight[j] <= total && (profit[j] / weight[j])>0) {
                 take[j] = 1.00;
                 if (profit[j]/weight[j]>atlagprofit) {
                     total = total - weight[j];

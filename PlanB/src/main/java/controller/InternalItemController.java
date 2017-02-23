@@ -28,19 +28,7 @@ import java.util.ArrayList;
 public class InternalItemController {
 
     private Logger LOG = Logger.getLogger(InternalItemController.class.getName());
-	@RequestMapping("/check")
-	@ResponseBody
-	public String check(@RequestParam Integer id, HttpServletRequest request, HttpServletResponse response, Model model) {
-		/*boolean a = getSomeResult();
-		if (a == true) {
-			model.addAttribute("alreadySaved", true);
-			return view;
-		} else {
-			model.addAttribute("alreadySaved", false);
-			return view;
-		}*/
-		return null;
-	}
+
 
     @RequestMapping(value = "", method = RequestMethod.POST)
     public @ResponseBody ResponseEntity sendBack(@RequestParam("AlgType") int algtype, @RequestParam("Weight") double[] wght,@RequestParam("Value") double[] value,@RequestParam("ItemsbyCities") int[][] items,@RequestParam("ItemsLength") int n,@RequestParam("Distances") int[][] dist,@RequestParam("DistLength") int m) {
@@ -113,7 +101,7 @@ public class InternalItemController {
 
 				for(int row = 0; row < ttp.getNumItems(); row++)
 				{
-					itm[row] = ttp.getItems_matrix()[row][al.get(i)-1];
+					itm[row] = ttp.getItems_matrix()[row][al.get(i)];
 				}
 				int db=0;
 				for (j=0;j<ttp.getNumItems();j++) {
@@ -131,10 +119,10 @@ public class InternalItemController {
 				gk.kiir();
 
 				if (toSend ==""){
-					toSend=toSend + (al.get(i)-1);
+					toSend=toSend + al.get(i);
 				}
 				else {
-					toSend=toSend + ":" + (al.get(i)-1);
+					toSend=toSend + ":" + al.get(i);
 				}
 				for (int q=0; q<gk.getTake().length; q++){
 					if (gk.getTake()[q] == 1.0){

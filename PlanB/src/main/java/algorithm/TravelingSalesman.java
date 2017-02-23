@@ -18,21 +18,21 @@ public class TravelingSalesman {
         int numCities = ttp.getNumCities();
         int[][] adjacencyMatrix = ttp.getAdjacency_matrix();
 
-        int[] visited = new int[numCities + 1];
-        visited[1] = 1;
-        stack.push(1);
+        int[] visited = new int[numCities];
+        visited[0] = 1;
+        stack.push(0);
         int element, dst = 0, i;
         int min = Integer.MAX_VALUE;
         boolean minFlag = false;
-        System.out.print(1 + "\t");
-        al.add(1);
+        System.out.print(0 + "\t");
+        al.add(0);
 
         while (!stack.isEmpty())
         {
             element = stack.peek();
-            i = 1;
+            i = 0;
             min = Integer.MAX_VALUE;
-            while (i <= numCities)
+            while (i < numCities)
             {
                 if (adjacencyMatrix[element][i] > 1 && visited[i] == 0)
                 {

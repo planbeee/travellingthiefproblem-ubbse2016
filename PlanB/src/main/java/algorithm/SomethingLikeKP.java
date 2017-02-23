@@ -152,14 +152,14 @@ public class SomethingLikeKP {
 
 		}*/
 
-       /* for (int i = 0; i < ttp.getNumItems(); i++){
+       for (int i = 0; i < ttp.getNumItems(); i++){
             for (int j = 0; j < ttp.getNumCities(); j++){
                 System.out.print(temp[i][j]+ " ");
             }
             System.out.println();
         }
-        System.out.println();
-        System.out.println("Total profit: " + total);*/
+        //System.out.println();
+        //System.out.println("Total profit: " + total);
         return temp;
     }
 
