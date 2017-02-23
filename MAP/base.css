@@ -63,6 +63,32 @@
     outline: 0px;
 }
 
+.container span.radio:hover {
+    cursor: pointer;
+}
+
+.container span.radio::before {
+    left: -52px;
+    width: 45px;
+    height: 25px;
+    background-color: #A8AAC1;
+    border-radius: 50px;
+}
+
+.container span.radio::after {
+    left: -49px;
+    width: 17px;
+    height: 17px;
+    border-radius: 10px;
+    background-color: #6C788A;
+    transition: left .25s, background-color .25s;
+}
+
+input[type="radio"]:checked+label span.radio::after {
+    left: -27px;
+    background-color: #EBFF43;
+}
+
 #map {
     width: 74%;
     height: 100vh;

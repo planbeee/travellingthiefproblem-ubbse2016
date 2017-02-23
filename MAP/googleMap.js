@@ -186,16 +186,16 @@ function reColorRoute() {
     let k = 0,
         l = 1,
         j = 0;
+
     while (l < expt.length) {
         while ((directionDisplay[j].beg != expt[k] || directionDisplay[j].end != expt[l]) && (directionDisplay[j].end != expt[k] || directionDisplay[j].beg != expt[l])) {
             j++;
-            console.log("j = " + j);
-        }
+        };
+
         directionDisplay[j].dir.polylineOptions.strokeColor = 'green';
         directionDisplay[j].dir.polylineOptions.strokeOpacity = 1.0;
         directionDisplay[j].dir.polylineOptions.strokeWeight = 3;
         directionDisplay[j].dir.setMap(map);
-        console.log("Green!!!");
         k++;
         l++;
         j = 0;
