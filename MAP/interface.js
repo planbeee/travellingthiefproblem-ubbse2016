@@ -40,8 +40,8 @@ let valItm = [],
 
 function addToPopSelect() {
     for (let i = 0; i < 10; i++) {
-        valItm[i] = Math.floor(Math.random() * 99) + 1;
-        wghItm[i] = Math.floor(Math.random() * 40) + 10;
+        valItm[i] = Math.floor(Math.random() * 200) + 100;
+        wghItm[i] = Math.floor(Math.random() * 50) + 10;
     }
 
     let select = document.getElementById("itemsSelect");

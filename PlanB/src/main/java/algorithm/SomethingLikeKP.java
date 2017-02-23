@@ -82,20 +82,23 @@ public class SomethingLikeKP {
         System.out.println();
     }
 
-    public int[] getResult(TTP ttp) {
+    public int[][] getResult(TTP ttp) {
 
         Item_city[] item_city = CreateList(ttp);
         //kiir(item_city);
         item_city=unitPriceOrder(item_city);
-        //kiir(item_city);
+        kiir(item_city);
 
         double total=0;
         double w=ttp.getKnapsackWeight();
 
         //ArrayList<Integer> res;
         int[][] temp = new int[ttp.getNumItems()][ttp.getNumCities()];
-        double suly[] = new double[ttp.getNumCities()];
-        int city[] = new int [ttp.getNumCities()];
+        //double suly[] = new double[ttp.getNumCities()];
+        //int city[] = new int [ttp.getNumCities()];
+
+        //int result[] = new int [ttp.getNumCities()];
+
         for (int i = 0; i < ttp.getNumItems(); i++){
             for (int j = 0; j < ttp.getNumCities(); j++){
                 temp[i][j]=0;
@@ -104,52 +107,60 @@ public class SomethingLikeKP {
         for (int i=0; i<item_city.length; i++){
             if (item_city[i].getWeight() <= w && item_city[i].getWeight()>0){
                 temp[item_city[i].getItem()][item_city[i].getCity()]=1;
-                suly[item_city[i].getCity()]=suly[item_city[i].getCity()]+item_city[i].getWeight();
-                city[item_city[i].getCity()]=item_city[i].getCity()+1;
+                //suly[item_city[i].getCity()]=suly[item_city[i].getCity()]+item_city[i].getWeight();
+                //city[item_city[i].getCity()]=item_city[i].getCity();
                 total=total + item_city[i].getValue();
                 w=w-item_city[i].getWeight();
             }
         }
-		/*for (int i = 0; i < ttp.getNumItems(); i++){
-            for (int j = 0; j < ttp.getNumCities(); j++){
-            	System.out.print(temp[i][j]+ " ");
-            }
-            System.out.println();
-		}*/
-        double temp1;
-        int temp2;
-        for (int i=0; i<ttp.getNumCities(); i++){
-            for (int j=1; j<ttp.getNumCities()-i; j++){
-                if (suly[j] < suly[j-1]){
-                    temp1=suly[j-1];
-                    suly[j-1]=suly[j];
-                    suly[j]=temp1;
-                    temp2=city[j-1];
-                    city[j-1]=city[j];
-                    city[j]=temp2;
-                }
-            }
+        /*int k=0;
+
+        System.out.println("Result");
+        for (int i=0; i<result.length; i++){
+            System.out.print(result[i] + " ");
         }
+        System.out.println();*/
+		/*double temp1;
+		int temp2;
+		for (int i=0; i<ttp.getNumCities(); i++){
+			for (int j=1; j<ttp.getNumCities()-i; j++){
+				if (suly[j] < suly[j-1]){
+					temp1=suly[j-1];
+					suly[j-1]=suly[j];
+					suly[j]=temp1;
+					temp2=city[j-1];
+					city[j-1]=city[j];
+					city[j]=temp2;
+				}
+			}
+		}*/
 
 		/*System.out.println("Sulyok");
 		for (int i=0; i<ttp.getNumCities(); i++){
 			System.out.print(city[i] + ": " + suly[i] + " ");
 		}*/
 
-        //System.out.println();
-        //System.out.println("Result");
-        //for (int i=0; i<ttp.getNumCities(); i++){
-        //System.out.print(city[i] + " ");
-			/*for (int j = 0; j < ttp.getNumItems(); j++){
+		/*System.out.println();
+		System.out.println("Result");
+		for (int i=0; i<ttp.getNumCities(); i++){
+			System.out.print(city[i] + " ");
+			for (int j = 0; j < ttp.getNumItems(); j++){
 				 if (temp[j][i] == 1)
-					 System.out.print(j+1 + " ");
+					 System.out.print(j + " ");
 			 }
 			System.out.println(";");
-			*/
-        //}
-        //System.out.println();
-        //System.out.println("Total profit: " + total);
-        return city;
+
+		}*/
+
+       /* for (int i = 0; i < ttp.getNumItems(); i++){
+            for (int j = 0; j < ttp.getNumCities(); j++){
+                System.out.print(temp[i][j]+ " ");
+            }
+            System.out.println();
+        }
+        System.out.println();
+        System.out.println("Total profit: " + total);*/
+        return temp;
     }
 
 }
