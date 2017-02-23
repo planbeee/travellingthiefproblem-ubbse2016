@@ -81,7 +81,7 @@ function addToSafe(markerIndex) {
     let selectedMarkerValue = markerData[0];
     let selectedMarkerWeight = markerData[1];
     document.getElementById("safe").innerHTML = "Values: " + selectedMarkerValue + "<br>Weights: " + selectedMarkerWeight;
-    selectedMarker = document.getElementById(markerIndex).index;
+    //selectedMarker = document.getElementById(markerIndex).index;
 }
 
 
@@ -212,18 +212,45 @@ let distMatrix = [];
 
 function testFunction(resp) {
 
-    JSONObj = {
+    /*JSONObj = {
         "WeightsOfItems": wghItm,
         "ValuesOfItems": valItm,
         "ItemsbyCities": itemsbyCities,
         "Distances": distMatrix
-    };
-    console.log(JSONObj);
+    };*/
+    //console.log(JSONObj);
     //console.log(toSend);
     //console.log(directionDisplay[0]);
     //console.log(distMatrix);
     //console.log(s);
+
+    /*let response = "0.2.3:1.5.3:3.1:4.6:5.10.2";
+
+    let citiesWthItems = response.split(":");
+    let citiesAndItems = [];
+    let sackText = "";
+    for (let i = 0; i < citiesWthItems.length; i++) {
+        citiesAndItems[i] = citiesWthItems[i].split(".");
+        expt[i] = parseInt(citiesAndItems[i][0]);
+        sackText += "City: " + citiesAndItems[i][0] + "<br>Values: ";
+
+        for (let j = 1; j < citiesAndItems[i].length; j++) {
+            sackText += citiesAndItems[i][j] + " ";
+        }
+        sackText += "<br><br>";
+    }
+    document.getElementById("sack").innerHTML = sackText;*/
+
+    //console.log(citiesAndItems);
+
+
 }
+
+$(function() {
+    $('#algChoice input').on('change', function() {
+        alert($('input[name=solution]:checked', '#algChoice').val());
+    });
+});
 
 
 // =========================================================
