@@ -2,7 +2,10 @@ package controller;
 
 import javax.servlet.http.HttpServletResponse;
 
+import algorithm.AtlagProfit;
+import algorithm.GreedyKnapsack;
 import algorithm.SomethingLikeKP;
+import algorithm.TravelingSalesman;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 import org.springframework.http.HttpHeaders;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import utilities.TTP;
 
+import java.util.ArrayList;
 
 
 @RestController
@@ -39,7 +43,7 @@ public class InternalItemController {
 	}
 
     @RequestMapping(value = "", method = RequestMethod.POST)
-    public @ResponseBody ResponseEntity sendBack(@RequestParam("Weight") double[] wght,@RequestParam("Value") double[] value,@RequestParam("ItemsbyCities") int[][] items,@RequestParam("ItemsLength") int n,@RequestParam("Distances") int[][] dist,@RequestParam("DistLength") int m) {
+    public @ResponseBody ResponseEntity sendBack(@RequestParam("AlgType") int algtype, @RequestParam("Weight") double[] wght,@RequestParam("Value") double[] value,@RequestParam("ItemsbyCities") int[][] items,@RequestParam("ItemsLength") int n,@RequestParam("Distances") int[][] dist,@RequestParam("DistLength") int m) {
     	HttpHeaders responseHeaders = new HttpHeaders();
     	responseHeaders.set("Access-Control-Allow-Origin", "*");
 
@@ -60,17 +64,11 @@ public class InternalItemController {
 		k=0;
 
 		for(i=0;i<items.length;i++) {
-			if(i%n==0 && i!=0) {
+			if (i % n == 0 && i != 0) {
 				k++;
 			}
-			b[k][i%n] = items[i][0];
+			b[k][i % n] = items[i][0];
 		}
-		/*for (i=0; i<m; i++){
-			for (j=0; j<n; j++){
-				System.out.print(b[i][j] + " ");
-			}
-			System.out.println();
-		}*/
 
 		for (i=0; i<n; i++){
 			for (j=0; j<m; j++) {
@@ -78,14 +76,6 @@ public class InternalItemController {
 			}
 		}
 
-		/*for (i=0; i<n; i++){
-			for (j=0; j<m; j++){
-				System.out.print(itemsbycitys[i][j] + " ");
-			}
-			System.out.println();
-		}
-
-		System.out.println("Ok2");*/
 		TTP ttp = new TTP();
 
 		ttp.setNumItems(n);
@@ -99,8 +89,100 @@ public class InternalItemController {
 		ttp.setKnapsackRent(0);
 		ttp.setKnapsackWeight(100);
 
-		int result[][];
-		int route[]=new int[ttp.getNumCities()];
+		String toSend="";
+
+		if (algtype == 0){
+
+			ArrayList<Integer> al=new TravelingSalesman(ttp).getResultArray();
+
+			GreedyKnapsack gk=new GreedyKnapsack(ttp.getNumItems());
+			double atlagprofit=new AtlagProfit(ttp).getProfit();
+
+			double weight[], profit[];
+			double KnapsackWeightLeft=ttp.getKnapsackWeight();
+			weight=new double[ttp.getNumItems()];
+			profit=new double[ttp.getNumItems()];
+
+			for (i=0;i<al.size();i++) {
+				for (j=0;j<ttp.getNumItems();j++) {
+					weight[j]=1;
+					profit[j]=0;
+				}
+
+				int itm[] =new int[ttp.getNumItems()];
+
+				for(int row = 0; row < ttp.getNumItems(); row++)
+				{
+					itm[row] = ttp.getItems_matrix()[row][al.get(i)-1];
+				}
+				int db=0;
+				for (j=0;j<ttp.getNumItems();j++) {
+					if (itm[j]==1) {
+						weight[db]=ttp.getWeights()[j];
+						profit[db]=ttp.getValues()[j];
+						db++;
+					}
+				}
+				System.out.println("City index: "+(al.get(i))+". Remaining weight: "+KnapsackWeightLeft+". Average profit: "+atlagprofit+".");
+				gk.setProfits(profit);
+				gk.setWeights(weight);
+				gk.Knapsack(KnapsackWeightLeft,ttp,atlagprofit);
+				KnapsackWeightLeft=gk.getTotal();
+				gk.kiir();
+
+				if (toSend ==""){
+					toSend=toSend + (al.get(i)-1);
+				}
+				else {
+					toSend=toSend + ":" + (al.get(i)-1);
+				}
+				for (int q=0; q<gk.getTake().length; q++){
+					if (gk.getTake()[q] == 1.0){
+						toSend=toSend + "." + q;
+					}
+				}
+			}
+		}
+		else{
+			int result[][];
+			int route[]=new int[ttp.getNumCities()];
+
+			SomethingLikeKP slkp = new SomethingLikeKP();
+			result=slkp.getResult(ttp);
+
+			int c=0;
+			for (j = 0; j < ttp.getNumCities(); j++){
+				for (i = 0; i < ttp.getNumItems(); i++){
+					if (result[i][j] == 1){
+						c++;
+					}
+				}
+				if (c>0){
+					if (toSend == ""){
+						toSend = toSend + j;
+					}
+					else toSend = toSend + ":" + j;
+				}
+				for (i = 0; i < ttp.getNumItems(); i++){
+					if (result[i][j] == 1) {
+						toSend = toSend + "." + i;
+					}
+				}
+				c=0;
+			}
+		}
+
+		/*for (i=0; i<n; i++){
+			for (j=0; j<m; j++){
+				System.out.print(itemsbycitys[i][j] + " ");
+			}
+			System.out.println();
+		}
+
+		System.out.println("Ok2");*/
+
+
+
 
 
 		/*for (i=0; i<m; i++){
@@ -109,30 +191,7 @@ public class InternalItemController {
 			}
 			System.out.println();
 		}*/
-		SomethingLikeKP slkp = new SomethingLikeKP();
-		result=slkp.getResult(ttp);
 
-		String toSend="";
-		int c=0;
-		for (j = 0; j < ttp.getNumCities(); j++){
-			for (i = 0; i < ttp.getNumItems(); i++){
-				if (result[i][j] == 1){
-					c++;
-				}
-			}
-			if (c>0){
-				if (toSend == ""){
-					toSend = toSend + j;
-				}
-				else toSend = toSend + ":" + j;
-			}
-			for (i = 0; i < ttp.getNumItems(); i++){
-				if (result[i][j] == 1) {
-					toSend = toSend + "." + i;
-				}
-			}
-			c=0;
-		}
 
 
     	/*System.out.println("Weights:");
