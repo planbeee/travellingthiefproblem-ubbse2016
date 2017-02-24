@@ -75,7 +75,7 @@ public class InternalItemController {
 		ttp.setVmin(0.1);
 		ttp.setVmax(1);
 		ttp.setKnapsackRent(0);
-		ttp.setKnapsackWeight(100);
+		ttp.setKnapsackWeight(200);
 
 		String toSend="";
 
